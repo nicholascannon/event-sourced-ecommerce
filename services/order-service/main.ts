@@ -1,12 +1,6 @@
-import { runHelloWorld } from '../pkg/sample-func';
+import { lifecycle } from '../pkg/shared/lifecycle';
 
-runHelloWorld();
+console.log('Dummy order service');
 
-const intervalId = setInterval(() => {
-    runHelloWorld();
-}, 30_000);
-
-process.on('SIGINT', () => {
-    console.log('Closing service...');
-    clearInterval(intervalId);
-});
+const intervalId = setInterval(() => {}, 30_000);
+lifecycle.on('close', () => clearInterval(intervalId));
