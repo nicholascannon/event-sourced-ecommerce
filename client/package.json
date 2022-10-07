@@ -1,13 +1,13 @@
 {
     "name": "event-source-ecommerce-client",
     "version": "0.0.1",
+    "author": "Nicholas Cannon",
     "scripts": {
         "start": "node ./scripts/serve.mjs",
         "build": "node ./scripts/build.mjs",
         "format:check": "prettier --check .",
         "format:write": "prettier --write ."
     },
-    "author": "Nicholas Cannon",
     "devDependencies": {
         "@types/react": "18.0.21",
         "@types/react-dom": "18.0.6",
