@@ -19,6 +19,8 @@ export const lifecycle = {
     },
 };
 
+export type Lifecycle = typeof lifecycle;
+
 process
     .on('uncaughtException', async () => {
         process.exitCode = 1;
