@@ -1,14 +1,9 @@
 import * as fs from 'fs';
 import esbuild from 'esbuild';
 import { minify } from 'html-minifier';
+import { APP_ENTRYPOINT, INDEX_HTML_PATH, INDEX_HTML_SCRIPT_TAG, OUTPUT_DIR } from './config.mjs';
 
-const INDEX_HTML_PATH = './src/index.html';
-const APP_ENTRYPOINT = './src/index.tsx';
-const OUTPUT_DIR = './dist';
 const NON_RELATIVE_OUTPUT_DIR = OUTPUT_DIR.replace('./', ''); // ./dist -> dist
-// You need to add this script tag to your index.html
-// It's also used to serve the app locally (see serve.mjs).
-const INDEX_HTML_SCRIPT_TAG = '<script src="js/index.js"></script>';
 
 const { metafile } = esbuild.buildSync({
     entryPoints: [APP_ENTRYPOINT],

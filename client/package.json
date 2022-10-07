@@ -2,6 +2,7 @@
     "name": "event-source-ecommerce-client",
     "version": "0.0.1",
     "scripts": {
+        "start": "node ./scripts/serve.mjs",
         "build": "node ./scripts/build.mjs"
     },
     "author": "Nicholas Cannon",
