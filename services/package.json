@@ -1,5 +1,5 @@
 {
-    "name": "event-sourced-ecommerce",
+    "name": "event-sourced-ecommerce-services",
     "version": "0.0.1",
     "author": "Nicholas Cannon",
     "type": "module",
