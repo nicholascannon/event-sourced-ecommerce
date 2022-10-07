@@ -2,8 +2,6 @@
 
 An event sourced ecommerce system for learning and development.
 
-![System design overview](./docs/diagrams/system-design.png)
-
 ## Project Goals
 
 -   Create an order
@@ -21,3 +19,12 @@ I have made the following out of scope for this project to keep things simple:
 -   Any product bounded context stuff e.g. product service (again use a mock)
 -   API authentication
 -   User specific stuff e.g. orders won't have a customer id attached
+
+## Services Overview
+
+-   **Order Service**: A web API responsible for creating, adding items to, viewing and checking out orders.
+-   **Order UI**: A React frontend application for the order service, allows users to interact with the system.
+-   **Order Read Model Populator**: A process manager that listens to order update events and builds the order read model used for querying orders.
+-   **Checkout Process Manager**: A process manager responsible for executing the checkout flow when orders are checked out.
+
+![System design overview](./docs/diagrams/system-design.png)
