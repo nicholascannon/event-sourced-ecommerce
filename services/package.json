@@ -3,5 +3,8 @@
     "version": "0.0.1",
     "author": "Nicholas Cannon",
     "type": "module",
-    "scripts": {}
+    "scripts": {},
+    "devDependencies": {
+        "typescript": "^4.8.4"
+    }
 }
