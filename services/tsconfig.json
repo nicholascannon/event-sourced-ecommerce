@@ -12,5 +12,5 @@
         "noUnusedParameters": true,
         "allowUnreachableCode": false
     },
-    "include": ["./order-service/**/*.ts"]
+    "include": ["./pkg/**/*.ts", "./order-service/**/*.ts"]
 }

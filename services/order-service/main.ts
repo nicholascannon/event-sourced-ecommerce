@@ -1,6 +1,10 @@
-console.log('Dummy order service');
+import { runHelloWorld } from '../pkg/sample-func';
 
-const intervalId = setInterval(() => {}, 30_000);
+runHelloWorld();
+
+const intervalId = setInterval(() => {
+    runHelloWorld();
+}, 30_000);
 
 process.on('SIGINT', () => {
     console.log('Closing service...');

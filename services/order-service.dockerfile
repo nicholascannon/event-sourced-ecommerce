@@ -6,6 +6,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm ci --quiet
 
+COPY ./pkg ./pkg
 COPY ./order-service ./order-service
 COPY tsconfig.json .
 

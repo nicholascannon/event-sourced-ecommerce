@@ -6,7 +6,7 @@
     "scripts": {
         "build:order-service": "tsc && esbuild ./order-service/main.ts --bundle --platform=node --external:./node_modules/* --target=node16 --format=esm --outfile=./bin/order-service.js",
         "start:order-service": "node ./bin/order-service",
-        "watch:order-service": "nodemon --exec 'npm run build:order-service && npm run start:order-service' -w ./order-service -e *.ts",
+        "watch:order-service": "nodemon --exec 'npm run build:order-service && npm run start:order-service' -w ./order-service -w ./pkg -e *.ts",
         "format:check": "prettier --check .",
         "format:write": "prettier --write .",
         "test": "jest"
