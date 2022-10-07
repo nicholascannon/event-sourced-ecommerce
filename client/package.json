@@ -1,11 +1,15 @@
 {
     "name": "event-source-ecommerce-client",
     "version": "0.0.1",
-    "scripts": {},
+    "scripts": {
+        "build": "node ./scripts/build.mjs"
+    },
     "author": "Nicholas Cannon",
     "devDependencies": {
         "@types/react": "^18.0.21",
         "@types/react-dom": "^18.0.6",
+        "esbuild": "^0.15.10",
+        "html-minifier": "^4.0.0",
         "typescript": "^4.8.4"
     },
     "dependencies": {
