@@ -2,6 +2,8 @@
 
 An event sourced ecommerce system for learning and development.
 
+Project status: **still in progress**.
+
 ## Project Goals
 
 -   Create an order
