@@ -55,3 +55,7 @@ services/           # Backend services code
     ...
 README.md           # File you're reading now
 ```
+
+## Recommended Reading
+
+-   [Order events overview](./docs/events.md)
