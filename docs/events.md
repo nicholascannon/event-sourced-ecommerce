@@ -6,7 +6,7 @@ This document outlines all the events written in this system.
 
 ## The Order Base Event
 
-```json
+```jsonc
 {
     "streamId": "<ORDER_UUID>",
     "streamType": "ORDER",
@@ -25,7 +25,7 @@ The version field is a simple incrementing counter that acts as an optimistic co
 
 ## Item Added Event Payload
 
-```json
+```jsonc
 {
     ...
     "eventType": "ORDER_ITEM_ADDED",
@@ -36,7 +36,7 @@ The version field is a simple incrementing counter that acts as an optimistic co
 }
 ```
 
-Simple adds the item at the current price to the order.
+Adds item at the current price to the order.
 
 ## Order Checked Out Event Payload
 
