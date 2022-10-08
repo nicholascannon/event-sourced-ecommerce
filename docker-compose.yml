@@ -29,3 +29,18 @@ services:
     depends_on:
       event-store:
         condition: service_healthy
+
+  order-service:
+    build:
+      dockerfile: order-service.dockerfile
+      context: ./services
+    environment:
+      PORT: 8000
+      DB_HOST: event-store
+      DB_USER: order-service
+      DB_PASSWORD: service-password
+      DB_PORT: 5432
+      DB_DATABASE: ecom
+    depends_on:
+      flyway:
+        condition: service_completed_successfully
