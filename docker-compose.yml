@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  event-store:
+    image: postgres:13.5-alpine
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
+      interval: 1s
+      timeout: 2s
+      retries: 15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ecom
+    ports:
+      - 5432:5432
+
+  flyway:
+    build: ./services/event-store-db
+    container_name: event-store-flyway
+    command: migrate
+    environment:
+      FLYWAY_USER: postgres
+      FLYWAY_PASSWORD: postgres
+      FLYWAY_URL: jdbc:postgresql://event-store/ecom
+      # Set the passwords for the users here
+      FLYWAY_PLACEHOLDERS_ORDER_SERVICE_USER_PASSWORD: service-password
+      FLYWAY_PLACEHOLDERS_ORDER_PROCESS_MANAGER_USER_PASSWORD: pm-password
+    depends_on:
+      event-store:
+        condition: service_healthy
