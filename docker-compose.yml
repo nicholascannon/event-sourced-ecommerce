@@ -24,8 +24,8 @@ services:
       FLYWAY_PASSWORD: postgres
       FLYWAY_URL: jdbc:postgresql://event-store/ecom
       # Set the passwords for the users here
-      FLYWAY_PLACEHOLDERS_ORDER_SERVICE_USER_PASSWORD: service-password
-      FLYWAY_PLACEHOLDERS_ORDER_PROCESS_MANAGER_USER_PASSWORD: pm-password
+      FLYWAY_PLACEHOLDERS_ORDER_SERVICE_USER_PASSWORD: password1
+      FLYWAY_PLACEHOLDERS_ORDER_PROCESS_MANAGER_USER_PASSWORD: password2
     depends_on:
       event-store:
         condition: service_healthy
@@ -42,8 +42,8 @@ services:
     environment:
       PORT: 8000
       DB_HOST: event-store
-      DB_USER: order-service
-      DB_PASSWORD: service-password
+      DB_USER: order_service
+      DB_PASSWORD: password1
       DB_PORT: 5432
       DB_DATABASE: ecom
       PRODUCT_SERVICE_HOST: product-service:8001
