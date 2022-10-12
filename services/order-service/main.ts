@@ -29,7 +29,7 @@ logger.info('Config', {
 });
 
 const pool = createPool(CONFIG.database);
-const app = createApp();
+const app = createApp(pool, { productServiceHost: CONFIG.productServiceHost });
 
 const server = app.listen(CONFIG.port, () => {
     logger.info('Service started', { port: CONFIG.port });
