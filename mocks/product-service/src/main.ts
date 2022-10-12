@@ -1,12 +1,14 @@
 import express from 'express';
-import { products } from './valid-products.json' assert { type: 'json' };
+import morgan from 'morgan';
+import validProducts from './valid-products.json' assert { type: 'json' };
 
 const app = express();
+app.use(morgan('dev'));
 
 app.get('/v1/product/:id', (req, res) => {
     const { id } = req.params;
 
-    const product = products.find((product) => product.id === id);
+    const product = validProducts.products.find((product) => product.id === id);
     if (product === undefined) {
         return res.sendStatus(404);
     }
