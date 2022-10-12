@@ -34,6 +34,8 @@ services:
     build: ./mocks/product-service
     environment:
       PORT: 8001
+    ports:
+      - 8001:8001
 
   order-service:
     build:
@@ -46,7 +48,9 @@ services:
       DB_PASSWORD: password1
       DB_PORT: 5432
       DB_DATABASE: ecom
-      PRODUCT_SERVICE_HOST: product-service:8001
+      PRODUCT_SERVICE_HOST: http://product-service:8001/v1
+    ports:
+      - 8000:8000
     depends_on:
       flyway:
         condition: service_completed_successfully
