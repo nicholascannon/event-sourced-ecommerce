@@ -30,6 +30,11 @@ services:
       event-store:
         condition: service_healthy
 
+  product-service:
+    build: ./mocks/product-service
+    environment:
+      PORT: 8001
+
   order-service:
     build:
       dockerfile: order-service.dockerfile
