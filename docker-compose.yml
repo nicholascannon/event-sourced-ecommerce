@@ -46,6 +46,7 @@ services:
       DB_PASSWORD: service-password
       DB_PORT: 5432
       DB_DATABASE: ecom
+      PRODUCT_SERVICE_HOST: product-service:8001
     depends_on:
       flyway:
         condition: service_completed_successfully

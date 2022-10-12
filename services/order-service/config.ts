@@ -18,8 +18,9 @@ export const CONFIG = (() => {
                 required: ['host', 'user', 'password', 'port', 'database'],
                 additionalProperties: false,
             },
+            productServiceHost: { type: 'string' },
         },
-        required: ['port', 'database'],
+        required: ['port', 'database', 'productServiceHost'],
         additionalProperties: false,
     });
 
@@ -33,6 +34,7 @@ export const CONFIG = (() => {
                 port: Number(process.env.DB_PORT),
                 database: process.env.DB_DATABASE,
             },
+            productServiceHost: process.env.PRODUCT_SERVICE_HOST,
         });
     } catch (error) {
         logger.error('Configuration error', error);
@@ -49,4 +51,5 @@ export interface Config {
         port: number;
         database: string;
     };
+    productServiceHost: string;
 }
