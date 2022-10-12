@@ -10,7 +10,7 @@ COPY tsconfig.json .
 COPY ./src ./src
 
 RUN npm run build
-RUN npm run prune --production
+RUN npm prune --omit=dev
 
 FROM base AS runtime
 WORKDIR /opt/app

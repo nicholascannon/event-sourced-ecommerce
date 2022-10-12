@@ -1,0 +1,29 @@
+{
+    "products": [
+        {
+            "id": "36176af9-a04f-40f3-805e-7fb9487f91d0",
+            "name": "Socks",
+            "price": 9.99
+        },
+        {
+            "id": "8151c2fc-6e3c-4285-a1b0-a00c194cd5ac",
+            "name": "Cargo Shorts",
+            "price": 50.0
+        },
+        {
+            "id": "fc7b8b76-27bd-41d3-aea6-47f1d1793c45",
+            "name": "Plain T-Shirt",
+            "price": 24.99
+        },
+        {
+            "id": "64b8240a-1737-4714-9c78-03ab9f7f0507",
+            "name": "White Sneakers",
+            "price": 150.0
+        },
+        {
+            "id": "e24b5420-3ebf-4996-8e8e-3b336366a1a2",
+            "name": "Graphic T-Shirt",
+            "price": 75.0
+        }
+    ]
+}
