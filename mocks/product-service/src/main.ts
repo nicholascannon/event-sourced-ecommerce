@@ -12,7 +12,7 @@ app.get('/v1/product/:id', (req, res) => {
     if (product === undefined) {
         return res.sendStatus(404);
     }
-    return res.json({ name: product.name, price: product.price });
+    return res.status(200).json({ name: product.name, price: product.price });
 });
 
 app.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}`));

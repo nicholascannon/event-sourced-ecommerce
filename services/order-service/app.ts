@@ -26,7 +26,7 @@ export function createApp(pool: pg.Pool, config: AppConfig) {
             const itemId = uuidValidator.validate(req.params.itemId);
 
             const productResponse = await fetch(`${productServiceHost}/product/${itemId}`);
-            if (!productResponse.ok) {
+            if (productResponse.status !== 200) {
                 if (productResponse.status === 404) {
                     return res.status(400).json({ message: 'Invalid item' });
                 }
@@ -35,10 +35,10 @@ export function createApp(pool: pg.Pool, config: AppConfig) {
                     `Product service /product integration threw: ${productResponse.status} ${productResponse.statusText}`
                 );
             }
-            const productResponsePayload = getProductResponseValidator.validate(await productResponse.json());
+            const productResponsePayload = (await productResponse.json()) as GetProductResponse;
             const item = { id: itemId, ...productResponsePayload };
 
-            const { rows: events } = await pool.query<{ eventType: string; payload: string }>(
+            const { rows: events } = await pool.query<{ eventType: string; payload: unknown }>(
                 `
                     SELECT
                         event_type as "eventType",
@@ -52,16 +52,20 @@ export function createApp(pool: pg.Pool, config: AppConfig) {
                 [orderId]
             );
 
+            // TODO: this should build an aggregate instead of find an item
             const hasItem = Boolean(
-                events.find((event) => {
-                    const { itemId } = JSON.parse(event.payload) as OrderItemAddedPayload;
-                    return itemId === item.id;
-                })
+                events
+                    .filter((event) => event.eventType === 'ORDER_ITEM_ADDED')
+                    .find((event) => {
+                        const { itemId } = event.payload as OrderItemAddedPayload;
+                        return itemId === item.id;
+                    })
             );
             if (hasItem) {
                 return res.sendStatus(202);
             }
 
+            // TODO: this should also validate more than just payload
             const event = orderItemAddedPayloadValidator.validate({ itemId: item.id, price: item.price });
             await pool.query(
                 `
@@ -73,7 +77,7 @@ export function createApp(pool: pg.Pool, config: AppConfig) {
                             payload
                         ) VALUES ($1, $2, $3, $4, $5);
                     `,
-                [orderId, 'ORDER_FLOW', 1, 'ORDER_ITEM_ADDED', JSON.stringify(event)]
+                [orderId, 'ORDER_FLOW', events.length + 1, 'ORDER_ITEM_ADDED', JSON.stringify(event)]
             );
 
             return res.sendStatus(events.length ? 200 : 201);
@@ -102,15 +106,10 @@ const orderItemAddedPayloadValidator = new AjvValidator<OrderItemAddedPayload>({
     additionalProperties: false,
 });
 
-const getProductResponseValidator = new AjvValidator<{ name: string; price: number }>({
-    type: 'object',
-    properties: {
-        name: { type: 'string' },
-        price: { type: 'number', exclusiveMinimum: 0 },
-    },
-    required: ['name', 'price'],
-    additionalProperties: false,
-});
+interface GetProductResponse {
+    name: string;
+    price: number;
+}
 
 // TODO: move into pkg as a generic validator
 const uuidValidator = new AjvValidator<string>({ type: 'string', format: 'uuid' });
