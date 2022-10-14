@@ -5,6 +5,7 @@ import pg from 'pg';
 import { errorHandler } from '../pkg/http/middleware/error-handler';
 import { requestLogger } from '../pkg/shared/logger';
 import { AjvValidator } from '../pkg/shared/validation';
+import { uuidValidator } from '../pkg/shared/validators';
 
 interface AppConfig {
     productServiceHost: string;
@@ -110,6 +111,3 @@ interface GetProductResponse {
     name: string;
     price: number;
 }
-
-// TODO: move into pkg as a generic validator
-const uuidValidator = new AjvValidator<string>({ type: 'string', format: 'uuid' });
