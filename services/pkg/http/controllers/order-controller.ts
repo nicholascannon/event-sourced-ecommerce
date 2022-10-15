@@ -1,29 +1,21 @@
 import pg from 'pg';
-import fetch from 'node-fetch';
 import { Request, Response } from 'express';
 import { uuidValidator } from '../../shared/validators';
 import { AjvValidator } from '../../shared/validation';
+import { ProductService } from '../../integrations/product/product-service';
 
 export class OrderController {
     // TODO: further abstraction of these dependencies required
-    constructor(private readonly pool: pg.Pool, private readonly productServiceHost: string) {}
+    constructor(private readonly pool: pg.Pool, private readonly productService: ProductService) {}
 
     async addItem(req: Request, res: Response): Promise<Response> {
         const orderId = uuidValidator.validate(req.params.orderId);
         const itemId = uuidValidator.validate(req.params.itemId);
 
-        const productResponse = await fetch(`${this.productServiceHost}/product/${itemId}`);
-        if (productResponse.status !== 200) {
-            if (productResponse.status === 404) {
-                return res.status(400).json({ message: 'Invalid item' });
-            }
-
-            throw new Error(
-                `Product service /product integration threw: ${productResponse.status} ${productResponse.statusText}`
-            );
+        const item = await this.productService.getProduct(itemId);
+        if (item === undefined) {
+            return res.sendStatus(404);
         }
-        const productResponsePayload = (await productResponse.json()) as GetProductResponse;
-        const item = { id: itemId, ...productResponsePayload };
 
         const { rows: events } = await this.pool.query<{ eventType: string; payload: unknown }>(
             `
@@ -85,8 +77,3 @@ const orderItemAddedPayloadValidator = new AjvValidator<OrderItemAddedPayload>({
     required: ['itemId', 'price'],
     additionalProperties: false,
 });
-
-interface GetProductResponse {
-    name: string;
-    price: number;
-}
