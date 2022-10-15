@@ -1,5 +1,5 @@
 import pg from 'pg';
-import { DomainEvent, DomainEventStore } from '../domain/domain-event-store';
+import { DomainEvent, DomainEventStore } from '../../domain/domain-event-store';
 
 export class PgEventStore implements DomainEventStore {
     constructor(private readonly pool: pg.Pool) {}

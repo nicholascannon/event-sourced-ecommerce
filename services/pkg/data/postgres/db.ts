@@ -1,5 +1,5 @@
 import pg from 'pg';
-import { logger } from '../shared/logger';
+import { logger } from '../../shared/logger';
 
 export function createPool(config: pg.PoolConfig): pg.Pool {
     const pool = new pg.Pool(config);
