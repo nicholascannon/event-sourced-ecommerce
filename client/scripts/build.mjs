@@ -26,10 +26,9 @@ const scriptTags = buildOutputs
     .map((output) => `<script src="${output.replace(NON_RELATIVE_OUTPUT_DIR + '/', '')}"></script>`);
 
 // Inject built JavaScript tags into index.html
-const indexContent = fs.readFileSync(INDEX_HTML_PATH, 'utf-8');
-const finalIndexContent = indexContent.replace(INDEX_HTML_SCRIPT_TAG, scriptTags.join());
+const indexContent = fs.readFileSync(INDEX_HTML_PATH, 'utf-8').replace(INDEX_HTML_SCRIPT_TAG, scriptTags.join());
 
-const minifiedHtml = minify(finalIndexContent, {
+const minifiedHtml = minify(indexContent, {
     collapseWhitespace: true,
     removeComments: true,
     removeRedundantAttributes: true,
