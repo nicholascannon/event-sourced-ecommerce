@@ -5,7 +5,6 @@ export interface AddItemEvent extends BaseEvent {
     eventType: 'ORDER_ITEM_ADDED';
     payload: {
         itemId: string;
-        price: number;
     };
 }
 

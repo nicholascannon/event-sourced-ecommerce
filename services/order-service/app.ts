@@ -1,7 +1,7 @@
 import express from 'express';
 import helmet from 'helmet';
 import { DomainEventStore } from '../pkg/domain/domain-event-store';
-import { OrderCommandHandler } from '../pkg/domain/order/order-command-handler';
+import { OrderService } from '../pkg/domain/order/order-service';
 import { OrderController } from '../pkg/http/controllers/order-controller';
 import { asyncHandler } from '../pkg/http/middleware/async-handler';
 import { errorHandler } from '../pkg/http/middleware/error-handler';
@@ -16,7 +16,7 @@ export function createApp(eventStore: DomainEventStore, config: AppConfig) {
     const { productServiceHost } = config;
 
     const productService = new HttpProductService(productServiceHost);
-    const orderCommandHandler = new OrderCommandHandler(eventStore);
+    const orderCommandHandler = new OrderService(eventStore);
 
     const orderController = new OrderController(orderCommandHandler, productService);
 
