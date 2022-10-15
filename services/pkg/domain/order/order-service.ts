@@ -9,6 +9,8 @@ export class OrderService {
         orderId: string,
         itemId: string
     ): Promise<{ created: boolean; duplicate: boolean; alreadyCheckedOut: boolean }> {
+        // NOTE: I would add a check in here to ensure a user doesn't have another in-progress
+        // order with a different id (creating 2 orders) but that is skipped for this demo.
         const events = await this.eventStore.loadStream<OrderEvent>(orderId, 'ORDER_FLOW');
 
         const order = new Order(orderId);
