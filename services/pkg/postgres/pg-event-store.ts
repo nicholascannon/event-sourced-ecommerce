@@ -1,11 +1,10 @@
 import pg from 'pg';
-import { DomainEvent } from '../domain/domain-events';
-import { EventStore } from '../event-store/generic-event-store';
+import { DomainEvent, DomainEventStore } from '../domain/domain-event-store';
 
-export class PgEventStore implements EventStore<DomainEvent> {
+export class PgEventStore implements DomainEventStore {
     constructor(private readonly pool: pg.Pool) {}
 
-    async loadStream(id: string, type: DomainEvent['streamType']): Promise<DomainEvent[]> {
+    async loadStream<E extends DomainEvent>(id: string, type: E['streamType']): Promise<E[]> {
         const { rows: events } = await this.pool.query<DomainEvent>(
             `
                 SELECT
@@ -23,9 +22,12 @@ export class PgEventStore implements EventStore<DomainEvent> {
             [id, type]
         );
 
-        return events;
+        // We can use `as E[]` here as we know that the query is filtering based on `stream_type`
+        return events as E[];
     }
+
     async save({ streamId, version, streamType, eventType, payload }: DomainEvent) {
+        // TODO: check if we throw due to unqiue constraint on version - possibly retry
         await this.pool.query(
             `
                 INSERT INTO order_context.events (
