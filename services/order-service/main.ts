@@ -1,4 +1,5 @@
 import { createPool } from '../pkg/postgres/db';
+import { PgEventStore } from '../pkg/postgres/pg-event-store';
 import { lifecycle } from '../pkg/shared/lifecycle';
 import { logger } from '../pkg/shared/logger';
 import { createApp } from './app';
@@ -29,7 +30,8 @@ logger.info('Config', {
 });
 
 const pool = createPool(CONFIG.database);
-const app = createApp(pool, { productServiceHost: CONFIG.productServiceHost });
+const eventStore = new PgEventStore(pool);
+const app = createApp(eventStore, { productServiceHost: CONFIG.productServiceHost });
 
 const server = app.listen(CONFIG.port, () => {
     logger.info('Service started', { port: CONFIG.port });
