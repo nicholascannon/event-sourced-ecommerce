@@ -1,10 +1,11 @@
 import { assertNever } from '../../shared/assert';
-import { AddItemEvent, OrderEvent } from './order-events';
+import { AddItemEvent, CheckedOutEvent, OrderEvent } from './order-events';
 
 export class Order {
     private _version: number;
     private _status: OrderStatus;
     private _items: Set<string>;
+    private _totalPrice: number | undefined;
 
     constructor(private readonly _id: string) {
         this._version = 0;
@@ -24,6 +25,14 @@ export class Order {
         return this._status;
     }
 
+    /**
+     * `totalPrice` is only defined if the order status is
+     * `CHECKED_OUT`.
+     */
+    public get totalPrice(): number | undefined {
+        return this._totalPrice;
+    }
+
     hasItem(itemId: string): boolean {
         return this._items.has(itemId);
     }
@@ -35,7 +44,7 @@ export class Order {
                     this.handleOrderItemAdded(event);
                     break;
                 case 'ORDER_CHECKED_OUT':
-                    this.handleStatusChange('CHECKED_OUT');
+                    this.handleOrderCheckedOut(event);
                     break;
                 case 'ORDER_CONFIRMED':
                     this.handleStatusChange('CONFIRMED');
@@ -50,6 +59,11 @@ export class Order {
 
     private handleOrderItemAdded(event: AddItemEvent) {
         this._items.add(event.payload.itemId);
+    }
+
+    private handleOrderCheckedOut(event: CheckedOutEvent) {
+        this.handleStatusChange('CHECKED_OUT');
+        this._totalPrice = event.payload.totalPrice;
     }
 
     private handleStatusChange(status: OrderStatus) {

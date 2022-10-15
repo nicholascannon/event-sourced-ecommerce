@@ -37,7 +37,7 @@ describe('Order', () => {
         expect(order.version).toBe(2);
     });
 
-    it('should checked out events correctly', () => {
+    it('should handle checked out events correctly', () => {
         const order = new Order('order-id');
         order.buildFrom([
             {
@@ -45,16 +45,19 @@ describe('Order', () => {
                 version: 1,
                 streamId: 'order-id',
                 streamType: 'ORDER_FLOW',
-                payload: {},
+                payload: {
+                    totalPrice: 5.0,
+                },
             },
         ]);
 
         expect(order.status).toBe('CHECKED_OUT');
         expect(order.id).toBe('order-id');
         expect(order.version).toBe(1);
+        expect(order.totalPrice).toBe(5.0);
     });
 
-    it('should order confirmed events correctly', () => {
+    it('should handle order confirmed events correctly', () => {
         const order = new Order('order-id');
         order.buildFrom([
             {

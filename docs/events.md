@@ -45,12 +45,13 @@ Adds item at the current price to the order.
     ...
     "eventType": "ORDER_CHECKED_OUT",
     "payload": {
-        /* Empty payload */
+        "totalPrice": 25.0
     },
 }
 ```
 
 Marks an order as checked out.
+Confirms the final total price of the order.
 After this event, any `ORDER_ITEM_ADDED` events will fail.
 
 ## Order Confirmed Event Payload

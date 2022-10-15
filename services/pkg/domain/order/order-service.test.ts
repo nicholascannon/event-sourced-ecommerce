@@ -87,7 +87,9 @@ describe('OrderService', () => {
                 streamType: 'ORDER_FLOW',
                 eventType: 'ORDER_CHECKED_OUT',
                 version: 2,
-                payload: {},
+                payload: {
+                    totalPrice: 5.0,
+                },
             });
             const { created, duplicate, alreadyCheckedOut } = await service.addItem(orderId, 'item-id');
 

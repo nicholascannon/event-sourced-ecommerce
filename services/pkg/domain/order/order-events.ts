@@ -11,7 +11,9 @@ export interface AddItemEvent extends BaseEvent {
 export interface CheckedOutEvent extends BaseEvent {
     streamType: 'ORDER_FLOW';
     eventType: 'ORDER_CHECKED_OUT';
-    payload: Record<string, never>; // forces empty object
+    payload: {
+        totalPrice: number;
+    };
 }
 
 export interface OrderConfirmedEvent extends BaseEvent {
