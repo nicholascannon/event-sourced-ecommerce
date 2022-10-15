@@ -22,7 +22,10 @@ export class OrderController {
         if (duplicate) {
             return res.sendStatus(202);
         }
+        if (created) {
+            return res.sendStatus(201);
+        }
 
-        return res.sendStatus(created ? 201 : 200);
+        return res.sendStatus(200);
     }
 }
