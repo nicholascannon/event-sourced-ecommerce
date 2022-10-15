@@ -1,5 +1,5 @@
-import { createPool } from '../pkg/postgres/db';
-import { PgEventStore } from '../pkg/postgres/pg-event-store';
+import { createPool } from '../pkg/data/postgres/db';
+import { PgEventStore } from '../pkg/data/postgres/pg-event-store';
 import { lifecycle } from '../pkg/shared/lifecycle';
 import { logger } from '../pkg/shared/logger';
 import { createApp } from './app';
