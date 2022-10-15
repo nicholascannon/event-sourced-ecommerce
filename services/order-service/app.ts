@@ -4,6 +4,7 @@ import pg from 'pg';
 import { OrderController } from '../pkg/http/controllers/order-controller';
 import { asyncHandler } from '../pkg/http/middleware/async-handler';
 import { errorHandler } from '../pkg/http/middleware/error-handler';
+import { HttpProductService } from '../pkg/integrations/product/product-service';
 import { requestLogger } from '../pkg/shared/logger';
 
 interface AppConfig {
@@ -13,7 +14,8 @@ interface AppConfig {
 export function createApp(pool: pg.Pool, config: AppConfig) {
     const { productServiceHost } = config;
 
-    const orderController = new OrderController(pool, productServiceHost);
+    const productService = new HttpProductService(productServiceHost);
+    const orderController = new OrderController(pool, productService);
 
     const app = express();
     app.use(helmet());
