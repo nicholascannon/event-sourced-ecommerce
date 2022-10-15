@@ -1,16 +1,16 @@
 import { Request, Response } from 'express';
 import { uuidValidator } from '../../shared/validators';
-import { ProductService } from '../../integrations/product/product-service';
+import { ProductIntegration } from '../../integrations/product/product-integration';
 import { OrderService } from '../../domain/order/order-service';
 
 export class OrderController {
-    constructor(private readonly orderService: OrderService, private readonly productService: ProductService) {}
+    constructor(private readonly orderService: OrderService, private readonly productIntegration: ProductIntegration) {}
 
     async addItem(req: Request, res: Response): Promise<Response> {
         const orderId = uuidValidator.validate(req.params.orderId);
         const itemId = uuidValidator.validate(req.params.itemId);
 
-        const item = await this.productService.getProduct(itemId);
+        const item = await this.productIntegration.getProduct(itemId);
         if (item === undefined) {
             return res.sendStatus(404);
         }

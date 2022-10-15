@@ -5,20 +5,12 @@ import { OrderService } from '../pkg/domain/order/order-service';
 import { OrderController } from '../pkg/http/controllers/order-controller';
 import { asyncHandler } from '../pkg/http/middleware/async-handler';
 import { errorHandler } from '../pkg/http/middleware/error-handler';
-import { HttpProductService } from '../pkg/integrations/product/product-service';
+import { ProductIntegration } from '../pkg/integrations/product/product-integration';
 import { requestLogger } from '../pkg/shared/logger';
 
-interface AppConfig {
-    productServiceHost: string;
-}
-
-export function createApp(eventStore: DomainEventStore, config: AppConfig) {
-    const { productServiceHost } = config;
-
-    const productService = new HttpProductService(productServiceHost);
-    const orderCommandHandler = new OrderService(eventStore);
-
-    const orderController = new OrderController(orderCommandHandler, productService);
+export function createApp(eventStore: DomainEventStore, productIntegration: ProductIntegration) {
+    const orderService = new OrderService(eventStore);
+    const orderController = new OrderController(orderService, productIntegration);
 
     const app = express();
     app.use(helmet());

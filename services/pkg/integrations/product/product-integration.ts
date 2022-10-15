@@ -2,7 +2,7 @@ import fetch, { FetchError } from 'node-fetch';
 import { IntegrationError } from '../integration-errors';
 import type { GetProductResponse } from './product-responses';
 
-export class HttpProductService implements ProductService {
+export class HttpProductIntegration implements ProductIntegration {
     constructor(private readonly productServiceHost: string) {}
 
     async getProduct(productId: string): Promise<Product | undefined> {
@@ -37,7 +37,7 @@ export class HttpProductService implements ProductService {
     }
 }
 
-export interface ProductService {
+export interface ProductIntegration {
     getProduct: (productId: string) => Promise<Product | undefined>;
 }
 
