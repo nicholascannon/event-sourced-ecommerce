@@ -32,7 +32,6 @@ The version field is a simple incrementing counter that acts as an optimistic co
     "eventType": "ORDER_ITEM_ADDED",
     "payload": {
         "itemId": "<ITEM_UUID>",
-        "price": 25.00,
     },
 }
 ```
