@@ -2,6 +2,7 @@ import express from 'express';
 import helmet from 'helmet';
 import fetch from 'node-fetch';
 import pg from 'pg';
+import { asyncHandler } from '../pkg/http/middleware/async-handler';
 import { errorHandler } from '../pkg/http/middleware/error-handler';
 import { requestLogger } from '../pkg/shared/logger';
 import { AjvValidator } from '../pkg/shared/validation';
@@ -21,8 +22,9 @@ export function createApp(pool: pg.Pool, config: AppConfig) {
 
     app.get('/healthcheck', (_req, res) => res.json({ status: 'healthy' }));
 
-    app.post('/v1/orders/:orderId/add/:itemId', async (req, res, next) => {
-        try {
+    app.post(
+        '/v1/orders/:orderId/add/:itemId',
+        asyncHandler(async (req, res) => {
             const orderId = uuidValidator.validate(req.params.orderId);
             const itemId = uuidValidator.validate(req.params.itemId);
 
@@ -82,10 +84,8 @@ export function createApp(pool: pg.Pool, config: AppConfig) {
             );
 
             return res.sendStatus(events.length ? 200 : 201);
-        } catch (error) {
-            next(error);
-        }
-    });
+        })
+    );
 
     app.use(errorHandler);
 
