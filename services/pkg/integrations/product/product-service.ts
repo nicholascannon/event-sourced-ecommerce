@@ -17,6 +17,7 @@ export class HttpProductService implements ProductService {
                     status: response.status,
                     statusText: response.statusText,
                     endpoint: '/product/:id',
+                    message: 'Unknown integration response',
                 });
             }
 
