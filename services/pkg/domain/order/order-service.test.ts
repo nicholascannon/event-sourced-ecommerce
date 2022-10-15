@@ -16,11 +16,12 @@ describe('OrderService', () => {
             const orderId = 'order-id';
             const itemId = 'item-id';
 
-            const { created, duplicate } = await service.addItem(orderId, itemId);
+            const { created, duplicate, alreadyCheckedOut } = await service.addItem(orderId, itemId);
             const stream = await eventStore.loadStream(orderId, 'ORDER_FLOW');
 
             expect(created).toBeTruthy();
             expect(duplicate).toBeFalsy();
+            expect(alreadyCheckedOut).toBeFalsy();
             expect(stream).toEqual([
                 {
                     streamId: orderId,
@@ -43,11 +44,12 @@ describe('OrderService', () => {
                 version: 1,
                 payload: { itemId: 'item-id-1' },
             });
-            const { created, duplicate } = await service.addItem(orderId, itemId);
+            const { created, duplicate, alreadyCheckedOut } = await service.addItem(orderId, itemId);
             const stream = await eventStore.loadStream(orderId, 'ORDER_FLOW');
 
             expect(created).toBeFalsy();
             expect(duplicate).toBeFalsy();
+            expect(alreadyCheckedOut).toBeFalsy();
             expect(stream[1]).toEqual({
                 streamId: orderId,
                 streamType: 'ORDER_FLOW',
@@ -68,12 +70,30 @@ describe('OrderService', () => {
                 version: 1,
                 payload: { itemId },
             });
-            const { created, duplicate } = await service.addItem(orderId, itemId);
+            const { created, duplicate, alreadyCheckedOut } = await service.addItem(orderId, itemId);
             const stream = await eventStore.loadStream(orderId, 'ORDER_FLOW');
 
             expect(created).toBeFalsy();
             expect(duplicate).toBeTruthy();
+            expect(alreadyCheckedOut).toBeFalsy();
             expect(stream.length).toBe(1);
+        });
+
+        it('should not allow items to be added to orders already checked out (not in progress orders)', async () => {
+            const orderId = 'order-id';
+
+            await eventStore.save({
+                streamId: orderId,
+                streamType: 'ORDER_FLOW',
+                eventType: 'ORDER_CHECKED_OUT',
+                version: 2,
+                payload: {},
+            });
+            const { created, duplicate, alreadyCheckedOut } = await service.addItem(orderId, 'item-id');
+
+            expect(created).toBeFalsy();
+            expect(duplicate).toBeFalsy();
+            expect(alreadyCheckedOut).toBeTruthy();
         });
     });
 });

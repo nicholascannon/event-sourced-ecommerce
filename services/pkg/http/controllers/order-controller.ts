@@ -15,7 +15,10 @@ export class OrderController {
             return res.sendStatus(404);
         }
 
-        const { created, duplicate } = await this.orderService.addItem(orderId, item.id);
+        const { created, duplicate, alreadyCheckedOut } = await this.orderService.addItem(orderId, item.id);
+        if (alreadyCheckedOut) {
+            return res.sendStatus(403);
+        }
         if (duplicate) {
             return res.sendStatus(202);
         }
