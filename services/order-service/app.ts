@@ -23,6 +23,10 @@ export function createApp(eventStore: DomainEventStore, productIntegration: Prod
         '/v1/orders/:orderId/add/:itemId',
         asyncHandler((req, res) => orderController.addItem(req, res))
     );
+    app.get(
+        '/v1/orders/:orderId',
+        asyncHandler((req, res) => orderController.getOrder(req, res))
+    );
 
     app.use(errorHandler);
 

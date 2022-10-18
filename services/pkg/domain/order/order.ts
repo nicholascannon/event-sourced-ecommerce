@@ -37,7 +37,11 @@ export class Order {
         return this._items.has(itemId);
     }
 
-    buildFrom(events: OrderEvent[]) {
+    public get items(): string[] {
+        return Array.from(this._items.values());
+    }
+
+    buildFrom(events: OrderEvent[]): Order {
         events.forEach((event) => {
             switch (event.eventType) {
                 case 'ORDER_ITEM_ADDED':
@@ -55,6 +59,8 @@ export class Order {
 
             this._version += 1;
         });
+
+        return this;
     }
 
     private handleOrderItemAdded(event: AddItemEvent) {

@@ -35,4 +35,9 @@ export class OrderService {
 
         return { created: isNewOrder, duplicate: false, alreadyCheckedOut: false };
     }
+
+    async getOrder(orderId: string): Promise<Order> {
+        const events = await this.eventStore.loadStream<OrderEvent>(orderId, 'ORDER_FLOW');
+        return new Order(orderId).buildFrom(events);
+    }
 }

@@ -28,4 +28,15 @@ export class OrderController {
 
         return res.sendStatus(200);
     }
+
+    async getOrder(req: Request, res: Response): Promise<Response> {
+        const orderId = uuidValidator.validate(req.params.orderId);
+        const order = await this.orderService.getOrder(orderId);
+        return res.json({
+            id: order.id,
+            status: order.status,
+            items: order.items,
+            version: order.version,
+        });
+    }
 }
