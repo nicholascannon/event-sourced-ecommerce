@@ -15,12 +15,13 @@ Project status: **still in progress**.
 
 I have made the following out of scope for this project to keep things simple:
 
--   Adding more than 1 item to an order (quantities)
+-   Item quantities (orders can have multiple items but with quantity 1)
 -   Removing items from order
--   Actually sending emails (instead use a mock)
--   Any product bounded context stuff e.g. product service (again use a mock)
--   API authentication
+-   Sending emails (use a mock)
+-   Product bounded context e.g. product service (use a mock)
+-   API authentication & authorization
 -   User specific stuff e.g. orders won't have a customer id attached
+-   Handling product price changes (e.g. concurrently setting the price while a customer checks out)
 
 ## Services Overview
 

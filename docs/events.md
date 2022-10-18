@@ -54,6 +54,10 @@ Marks an order as checked out.
 Confirms the final total price of the order.
 After this event, any `ORDER_ITEM_ADDED` events will fail.
 
+**Known issue**: The total price is computed from querying the product service.
+If the product's price changes just after the checkout request is sent but _before_ this event is created, a user will be charged a price they did not see.
+This is out of scope for this project but feel free to ask me how I'd solve it.
+
 ## Order Confirmed Event Payload
 
 ```jsonc
