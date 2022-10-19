@@ -9,8 +9,8 @@ import { ProductIntegration } from '../pkg/integrations/product/product-integrat
 import { requestLogger } from '../pkg/shared/logger';
 
 export function createApp(eventStore: DomainEventStore, productIntegration: ProductIntegration) {
-    const orderService = new OrderService(eventStore);
-    const orderController = new OrderController(orderService, productIntegration);
+    const orderService = new OrderService(eventStore, productIntegration);
+    const orderController = new OrderController(orderService);
 
     const app = express();
     app.use(helmet());

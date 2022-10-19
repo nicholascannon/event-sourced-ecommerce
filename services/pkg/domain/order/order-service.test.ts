@@ -1,81 +1,87 @@
 import { MemoryEventStore } from '../../data/memory/memory-event-store';
+import { MockProductIntegration, Product, ProductIntegration } from '../../integrations/product/product-integration';
 import { DomainEventStore } from '../domain-event-store';
 import { OrderService } from './order-service';
 
 describe('OrderService', () => {
     let eventStore: DomainEventStore;
     let service: OrderService;
+    let productInt: ProductIntegration;
+    let products: Product[] = [
+        {
+            id: 'item-id-1',
+            name: 'Item 1',
+            price: 5.0,
+        },
+        {
+            id: 'item-id-2',
+            name: 'Item 2',
+            price: 10.0,
+        },
+    ];
 
     beforeEach(() => {
         eventStore = new MemoryEventStore();
-        service = new OrderService(eventStore);
+        productInt = new MockProductIntegration(products);
+        service = new OrderService(eventStore, productInt);
     });
 
     describe('addItem', () => {
         it('should add the item and create order when no events exist', async () => {
             const orderId = 'order-id';
-            const itemId = 'item-id';
 
-            const { created, duplicate, alreadyCheckedOut } = await service.addItem(orderId, itemId);
+            const response = await service.addItem(orderId, products[0].id);
             const stream = await eventStore.loadStream(orderId, 'ORDER_FLOW');
 
-            expect(created).toBeTruthy();
-            expect(duplicate).toBeFalsy();
-            expect(alreadyCheckedOut).toBeFalsy();
+            expect(response).toBe('CREATED_ORDER');
             expect(stream).toEqual([
                 {
                     streamId: orderId,
                     streamType: 'ORDER_FLOW',
                     eventType: 'ORDER_ITEM_ADDED',
                     version: 1,
-                    payload: { itemId },
+                    payload: { itemId: products[0].id },
                 },
             ]);
         });
 
         it('should add new item when existing item is different', async () => {
             const orderId = 'order-id';
-            const itemId = 'item-id-2';
 
             await eventStore.save({
                 streamId: orderId,
                 streamType: 'ORDER_FLOW',
                 eventType: 'ORDER_ITEM_ADDED',
                 version: 1,
-                payload: { itemId: 'item-id-1' },
+                payload: { itemId: products[0].id },
             });
-            const { created, duplicate, alreadyCheckedOut } = await service.addItem(orderId, itemId);
+            const response = await service.addItem(orderId, products[1].id);
             const stream = await eventStore.loadStream(orderId, 'ORDER_FLOW');
 
-            expect(created).toBeFalsy();
-            expect(duplicate).toBeFalsy();
-            expect(alreadyCheckedOut).toBeFalsy();
+            expect(response).toBe('SUCCESS');
             expect(stream[1]).toEqual({
                 streamId: orderId,
                 streamType: 'ORDER_FLOW',
                 eventType: 'ORDER_ITEM_ADDED',
                 version: 2,
-                payload: { itemId },
+                payload: { itemId: products[1].id },
             });
         });
 
-        it('shouldnt add the new item and mark it as duplicate', async () => {
+        it('should mark existing item as duplicate', async () => {
             const orderId = 'order-id';
-            const itemId = 'item-id';
 
             await eventStore.save({
                 streamId: orderId,
                 streamType: 'ORDER_FLOW',
                 eventType: 'ORDER_ITEM_ADDED',
                 version: 1,
-                payload: { itemId },
+                payload: { itemId: products[0].id },
             });
-            const { created, duplicate, alreadyCheckedOut } = await service.addItem(orderId, itemId);
+            const response = await service.addItem(orderId, products[0].id);
             const stream = await eventStore.loadStream(orderId, 'ORDER_FLOW');
 
-            expect(created).toBeFalsy();
-            expect(duplicate).toBeTruthy();
-            expect(alreadyCheckedOut).toBeFalsy();
+            expect(response).toBe('DUPLICATE_ITEM');
             expect(stream.length).toBe(1);
         });
 
@@ -91,11 +97,9 @@ describe('OrderService', () => {
                     totalPrice: 5.0,
                 },
             });
-            const { created, duplicate, alreadyCheckedOut } = await service.addItem(orderId, 'item-id');
+            const response = await service.addItem(orderId, products[0].id);
 
-            expect(created).toBeFalsy();
-            expect(duplicate).toBeFalsy();
-            expect(alreadyCheckedOut).toBeTruthy();
+            expect(response).toBe('ORDER_CHECKED_OUT');
         });
     });
 
@@ -110,7 +114,6 @@ describe('OrderService', () => {
 
         it('should get a hydrated order when events exist for that order id', async () => {
             const orderId = 'order-id';
-            const itemId = 'item-id-2';
 
             // Add item
             await eventStore.save({
@@ -118,7 +121,7 @@ describe('OrderService', () => {
                 streamType: 'ORDER_FLOW',
                 eventType: 'ORDER_ITEM_ADDED',
                 version: 1,
-                payload: { itemId },
+                payload: { itemId: products[0].id },
             });
 
             // Checkout order
@@ -134,7 +137,7 @@ describe('OrderService', () => {
 
             const order = await service.getOrder(orderId);
             expect(order.id).toBe(orderId);
-            expect(order.items).toEqual([itemId]);
+            expect(order.items).toEqual([products[0].id]);
             expect(order.version).toBe(2);
             expect(order.status).toBe('CHECKED_OUT');
         });

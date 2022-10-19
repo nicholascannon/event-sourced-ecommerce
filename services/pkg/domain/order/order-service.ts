@@ -1,29 +1,31 @@
+import { ProductIntegration } from '../../integrations/product/product-integration';
 import { DomainEventStore } from '../domain-event-store';
 import { Order } from './order';
 import { OrderEvent } from './order-events';
 
 export class OrderService {
-    constructor(private readonly eventStore: DomainEventStore) {}
+    constructor(
+        private readonly eventStore: DomainEventStore,
+        private readonly productIntegration: ProductIntegration
+    ) {}
 
-    async addItem(
-        orderId: string,
-        itemId: string
-    ): Promise<{ created: boolean; duplicate: boolean; alreadyCheckedOut: boolean }> {
+    async addItem(orderId: string, itemId: string): Promise<AddItemResponse> {
         // NOTE: I would add a check in here to ensure a user doesn't have another in-progress
         // order with a different id (creating 2 orders) but that is skipped for this demo.
         const events = await this.eventStore.loadStream<OrderEvent>(orderId, 'ORDER_FLOW');
-
-        const order = new Order(orderId);
-        order.buildFrom(events);
+        const order = new Order(orderId).buildFrom(events);
 
         if (order.status !== 'IN_PROGRESS') {
-            return { created: false, duplicate: false, alreadyCheckedOut: true };
+            return 'ORDER_CHECKED_OUT';
         }
         if (order.hasItem(itemId)) {
-            return { created: false, duplicate: true, alreadyCheckedOut: false };
+            return 'DUPLICATE_ITEM';
         }
 
-        const isNewOrder = order.version === 0;
+        const item = await this.productIntegration.getProduct(itemId);
+        if (item === undefined) {
+            return 'INVALID_ITEM';
+        }
 
         await this.eventStore.save({
             streamId: orderId,
@@ -33,7 +35,11 @@ export class OrderService {
             payload: { itemId },
         });
 
-        return { created: isNewOrder, duplicate: false, alreadyCheckedOut: false };
+        if (order.version === 0) {
+            return 'CREATED_ORDER';
+        }
+
+        return 'SUCCESS';
     }
 
     async getOrder(orderId: string): Promise<Order> {
@@ -41,3 +47,6 @@ export class OrderService {
         return new Order(orderId).buildFrom(events);
     }
 }
+
+type AddItemResponse = 'SUCCESS' | 'CREATED_ORDER' | 'DUPLICATE_ITEM' | 'INVALID_ITEM' | 'ORDER_CHECKED_OUT';
+

@@ -41,8 +41,16 @@ export interface ProductIntegration {
     getProduct: (productId: string) => Promise<Product | undefined>;
 }
 
-interface Product {
+export interface Product {
     id: string;
     name: string;
     price: number;
+}
+
+export class MockProductIntegration implements ProductIntegration {
+    constructor(private readonly products: Product[]) {}
+
+    async getProduct(productId: string): Promise<Product | undefined> {
+        return this.products.find((product) => product.id === productId);
+    }
 }
