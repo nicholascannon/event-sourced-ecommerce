@@ -27,6 +27,10 @@ export function createApp(eventStore: DomainEventStore, productIntegration: Prod
         '/v1/orders/:orderId',
         asyncHandler((req, res) => orderController.getOrder(req, res))
     );
+    app.post(
+        '/v1/orders/:orderId/checkout',
+        asyncHandler((req, res) => orderController.checkout(req, res))
+    );
 
     app.use(errorHandler);
 

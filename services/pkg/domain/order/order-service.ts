@@ -46,7 +46,35 @@ export class OrderService {
         const events = await this.eventStore.loadStream<OrderEvent>(orderId, 'ORDER_FLOW');
         return new Order(orderId).buildFrom(events);
     }
+
+    async checkout(orderId: string): Promise<CheckoutResponse> {
+        const events = await this.eventStore.loadStream<OrderEvent>(orderId, 'ORDER_FLOW');
+        const order = new Order(orderId).buildFrom(events);
+
+        if (order.status !== 'IN_PROGRESS') {
+            return 'ALREADY_CHECKED_OUT';
+        }
+
+        const orderItems = await Promise.all(order.items.map((itemId) => this.productIntegration.getProduct(itemId)));
+        const totalPrice = orderItems.reduce((total, item) => {
+            if (item === undefined) {
+                return total;
+            }
+            return total + item.price;
+        }, 0);
+
+        await this.eventStore.save({
+            streamId: orderId,
+            streamType: 'ORDER_FLOW',
+            eventType: 'ORDER_CHECKED_OUT',
+            version: order.version + 1,
+            payload: { totalPrice },
+        });
+
+        return 'SUCCESS';
+    }
 }
 
 type AddItemResponse = 'SUCCESS' | 'CREATED_ORDER' | 'DUPLICATE_ITEM' | 'INVALID_ITEM' | 'ORDER_CHECKED_OUT';
 
+type CheckoutResponse = 'SUCCESS' | 'ALREADY_CHECKED_OUT';

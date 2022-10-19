@@ -42,4 +42,18 @@ export class OrderController {
             version: order.version,
         });
     }
+
+    async checkout(req: Request, res: Response) {
+        const orderId = uuidValidator.validate(req.params.orderId);
+
+        const checkoutResponse = await this.orderService.checkout(orderId);
+        switch (checkoutResponse) {
+            case 'ALREADY_CHECKED_OUT':
+                return res.sendStatus(403);
+            case 'SUCCESS':
+                return res.sendStatus(200);
+            default:
+                assertNever(checkoutResponse);
+        }
+    }
 }
