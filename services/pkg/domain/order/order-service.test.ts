@@ -98,4 +98,45 @@ describe('OrderService', () => {
             expect(alreadyCheckedOut).toBeTruthy();
         });
     });
+
+    describe('getItem', () => {
+        it('should get an initial order if one doesnt exist under that id', async () => {
+            const order = await service.getOrder('id');
+            expect(order.id).toBe('id');
+            expect(order.items).toEqual([]);
+            expect(order.version).toBe(0);
+            expect(order.status).toBe('IN_PROGRESS');
+        });
+
+        it('should get a hydrated order when events exist for that order id', async () => {
+            const orderId = 'order-id';
+            const itemId = 'item-id-2';
+
+            // Add item
+            await eventStore.save({
+                streamId: orderId,
+                streamType: 'ORDER_FLOW',
+                eventType: 'ORDER_ITEM_ADDED',
+                version: 1,
+                payload: { itemId },
+            });
+
+            // Checkout order
+            await eventStore.save({
+                streamId: orderId,
+                streamType: 'ORDER_FLOW',
+                eventType: 'ORDER_CHECKED_OUT',
+                version: 2,
+                payload: {
+                    totalPrice: 5.0,
+                },
+            });
+
+            const order = await service.getOrder(orderId);
+            expect(order.id).toBe(orderId);
+            expect(order.items).toEqual([itemId]);
+            expect(order.version).toBe(2);
+            expect(order.status).toBe('CHECKED_OUT');
+        });
+    });
 });
