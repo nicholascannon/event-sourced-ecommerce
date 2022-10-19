@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { Lifecycle } from './lifecycle';
 
 describe('lifecycle', () => {
