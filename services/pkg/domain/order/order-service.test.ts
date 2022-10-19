@@ -142,4 +142,90 @@ describe('OrderService', () => {
             expect(order.status).toBe('CHECKED_OUT');
         });
     });
+
+    describe('checkout', () => {
+        it('should checkout a valid order with one item', async () => {
+            const orderId = 'order-id';
+
+            // Add item
+            await eventStore.save({
+                streamId: orderId,
+                streamType: 'ORDER_FLOW',
+                eventType: 'ORDER_ITEM_ADDED',
+                version: 1,
+                payload: { itemId: products[0].id },
+            });
+
+            const response = await service.checkout(orderId);
+            const stream = await eventStore.loadStream(orderId, 'ORDER_FLOW');
+
+            expect(response).toBe('SUCCESS');
+            expect(stream[1]).toEqual({
+                streamId: orderId,
+                streamType: 'ORDER_FLOW',
+                eventType: 'ORDER_CHECKED_OUT',
+                version: 2,
+                payload: {
+                    totalPrice: products[0].price,
+                },
+            });
+        });
+
+        it('should checkout a valid order with multiple items', async () => {
+            const orderId = 'order-id';
+
+            // Add items
+            await eventStore.save({
+                streamId: orderId,
+                streamType: 'ORDER_FLOW',
+                eventType: 'ORDER_ITEM_ADDED',
+                version: 1,
+                payload: { itemId: products[0].id },
+            });
+            await eventStore.save({
+                streamId: orderId,
+                streamType: 'ORDER_FLOW',
+                eventType: 'ORDER_ITEM_ADDED',
+                version: 2,
+                payload: { itemId: products[1].id },
+            });
+
+            const response = await service.checkout(orderId);
+            const stream = await eventStore.loadStream(orderId, 'ORDER_FLOW');
+
+            expect(response).toBe('SUCCESS');
+            expect(stream[2]).toEqual({
+                streamId: orderId,
+                streamType: 'ORDER_FLOW',
+                eventType: 'ORDER_CHECKED_OUT',
+                version: 3,
+                payload: {
+                    totalPrice: products[0].price + products[1].price,
+                },
+            });
+        });
+
+        it('should fail to checkout an order that does not exist', async () => {
+            const response = await service.checkout('non-existent-order');
+            expect(response).toBe('ORDER_NOT_FOUND');
+        });
+
+        it('should not checkout an order twice', async () => {
+            const orderId = 'order-id';
+
+            await eventStore.save({
+                streamId: orderId,
+                streamType: 'ORDER_FLOW',
+                eventType: 'ORDER_CHECKED_OUT',
+                version: 2,
+                payload: {
+                    totalPrice: 5,
+                },
+            });
+
+            const response = await service.checkout(orderId);
+
+            expect(response).toBe('ALREADY_CHECKED_OUT');
+        });
+    });
 });
