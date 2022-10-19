@@ -51,6 +51,9 @@ export class OrderService {
         const events = await this.eventStore.loadStream<OrderEvent>(orderId, 'ORDER_FLOW');
         const order = new Order(orderId).buildFrom(events);
 
+        if (order.version === 0) {
+            return 'ORDER_NOT_FOUND';
+        }
         if (order.status !== 'IN_PROGRESS') {
             return 'ALREADY_CHECKED_OUT';
         }
@@ -77,4 +80,4 @@ export class OrderService {
 
 type AddItemResponse = 'SUCCESS' | 'CREATED_ORDER' | 'DUPLICATE_ITEM' | 'INVALID_ITEM' | 'ORDER_CHECKED_OUT';
 
-type CheckoutResponse = 'SUCCESS' | 'ALREADY_CHECKED_OUT';
+type CheckoutResponse = 'SUCCESS' | 'ALREADY_CHECKED_OUT' | 'ORDER_NOT_FOUND';

@@ -52,6 +52,8 @@ export class OrderController {
                 return res.sendStatus(403);
             case 'SUCCESS':
                 return res.sendStatus(200);
+            case 'ORDER_NOT_FOUND':
+                return res.sendStatus(404);
             default:
                 assertNever(checkoutResponse);
         }
