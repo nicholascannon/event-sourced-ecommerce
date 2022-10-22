@@ -1,5 +1,5 @@
 import { ErrorRequestHandler } from 'express';
-import { AlreadyCheckedOutError, InvalidOrderItemError, OrderNotFoundError } from '../../domain/order/order-errors';
+import { AlreadyCheckedOutError, InvalidOrderItemError, OrderDoesNotExist } from '../../domain/order/order-errors';
 import { logger } from '../../shared/logger';
 import { ValidationError } from '../../shared/validation';
 
@@ -14,11 +14,11 @@ export const errorHandler: ErrorRequestHandler = (error, _req, res, next) => {
         case ValidationError:
             return res.status(400).json({ message: error.errors });
         case AlreadyCheckedOutError:
-            return res.sendStatus(403);
+            return res.status(403).json({ message: error.message, orderId: error.orderId });
         case InvalidOrderItemError:
-            return res.sendStatus(400);
-        case OrderNotFoundError:
-            return res.sendStatus(404);
+            return res.status(400).json({ message: error.message, itemIds: error.itemIds });
+        case OrderDoesNotExist:
+            return res.status(400).json({ message: error.message, orderId: error.orderId });
     }
 
     logger.error('Internal server error', error);

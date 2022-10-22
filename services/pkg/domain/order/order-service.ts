@@ -1,7 +1,7 @@
 import { ProductIntegration } from '../../integrations/product/product-integration';
 import { DomainEventStore } from '../domain-event-store';
 import { Order } from './order';
-import { AlreadyCheckedOutError, InvalidOrderItemError, OrderNotFoundError } from './order-errors';
+import { AlreadyCheckedOutError, InvalidOrderItemError, OrderDoesNotExist } from './order-errors';
 import { OrderEvent } from './order-events';
 
 export class OrderService {
@@ -25,7 +25,7 @@ export class OrderService {
 
         const item = await this.productIntegration.getProduct(itemId);
         if (item === undefined) {
-            throw new InvalidOrderItemError(itemId);
+            throw new InvalidOrderItemError([itemId]);
         }
 
         await this.eventStore.save({
@@ -58,7 +58,7 @@ export class OrderService {
         const order = new Order(orderId).buildFrom(events);
 
         if (order.version === 0) {
-            throw new OrderNotFoundError(orderId);
+            throw new OrderDoesNotExist(orderId);
         }
         if (order.status !== 'IN_PROGRESS') {
             throw new AlreadyCheckedOutError(orderId);
@@ -67,16 +67,16 @@ export class OrderService {
         const orderItems = await Promise.all(order.items.map((itemId) => this.productIntegration.getProduct(itemId)));
 
         // Check if we have an invalid item in the order
-        const invalidItems = orderItems.reduce<number[]>((prev, curr, idx) => {
+        const invalidItems = orderItems.reduce<string[]>((prev, curr, idx) => {
             if (curr === undefined) {
-                prev.push(idx);
+                prev.push(order.items[idx]);
                 return prev;
             }
             return prev;
         }, []);
 
         if (invalidItems.length !== 0) {
-            throw new InvalidOrderItemError(invalidItems.join(', '));
+            throw new InvalidOrderItemError(invalidItems);
         }
 
         const totalPrice = orderItems.reduce((total, item) => {

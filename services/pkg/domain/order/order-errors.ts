@@ -1,20 +1,20 @@
 export class AlreadyCheckedOutError extends Error {
-    constructor(orderId: string) {
+    constructor(public readonly orderId: string) {
         super(`Cannot complete action on checked out order ${orderId}`);
         this.name = this.constructor.name;
     }
 }
 
 export class InvalidOrderItemError extends Error {
-    constructor(itemId: string) {
-        super(`Item ${itemId} is not a valid item`);
+    constructor(public readonly itemIds: string[]) {
+        super(`Invalid items in order: ${itemIds.join(', ')}`);
         this.name = this.constructor.name;
     }
 }
 
-export class OrderNotFoundError extends Error {
-    constructor(orderId: string) {
-        super(`Order ${orderId} not found`);
+export class OrderDoesNotExist extends Error {
+    constructor(public readonly orderId: string) {
+        super(`Cannot complete action on unknown order ${orderId}`);
         this.name = this.constructor.name;
     }
 }

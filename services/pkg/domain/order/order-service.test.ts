@@ -1,7 +1,7 @@
 import { MemoryEventStore } from '../../data/memory/memory-event-store';
 import { MockProductIntegration, Product, ProductIntegration } from '../../integrations/product/product-integration';
 import { DomainEventStore } from '../domain-event-store';
-import { AlreadyCheckedOutError, InvalidOrderItemError, OrderNotFoundError } from './order-errors';
+import { AlreadyCheckedOutError, InvalidOrderItemError, OrderDoesNotExist } from './order-errors';
 import { OrderService } from './order-service';
 
 describe('OrderService', () => {
@@ -206,7 +206,7 @@ describe('OrderService', () => {
         });
 
         it('should fail to checkout an order that does not exist', async () => {
-            expect(async () => service.checkout('non-existent-order')).rejects.toThrowError(OrderNotFoundError);
+            expect(async () => service.checkout('non-existent-order')).rejects.toThrowError(OrderDoesNotExist);
         });
 
         it('should not checkout an order twice', async () => {
