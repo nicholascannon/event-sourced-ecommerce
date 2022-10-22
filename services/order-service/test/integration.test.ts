@@ -23,7 +23,7 @@ describe('order-service', () => {
         });
     });
 
-    describe('/orders/:orderId', () => {
+    describe('/v1/orders/:orderId', () => {
         it('should return 404 for order that does not exist', async () => {
             const { status } = await request(app).get('/v1/orders/be810914-6487-4a0b-870e-61cfca2f96c7');
             expect(status).toBe(404);
