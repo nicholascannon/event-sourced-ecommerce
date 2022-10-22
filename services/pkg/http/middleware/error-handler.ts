@@ -8,17 +8,20 @@ export const errorHandler: ErrorRequestHandler = (error, _req, res, next) => {
         return next(error);
     }
 
+    if (error instanceof ValidationError) {
+        return res.status(400).json({ message: error.errors });
+    }
+
     // NOTE: If the app scales up, we should pull the domain specific errors into a special
     // domain specific express error handler. For now since we have 1 domain, let's leave here.
-    switch (error.constructor) {
-        case ValidationError:
-            return res.status(400).json({ message: error.errors });
-        case AlreadyCheckedOutError:
-            return res.status(403).json({ message: error.message, orderId: error.orderId });
-        case InvalidOrderItemError:
-            return res.status(400).json({ message: error.message, itemIds: error.itemIds });
-        case OrderDoesNotExist:
-            return res.status(400).json({ message: error.message, orderId: error.orderId });
+    if (error instanceof AlreadyCheckedOutError) {
+        return res.status(403).json({ message: error.message, orderId: error.orderId });
+    }
+    if (error instanceof InvalidOrderItemError) {
+        return res.status(400).json({ message: error.message, itemIds: error.itemIds });
+    }
+    if (error instanceof OrderDoesNotExist) {
+        return res.status(400).json({ message: error.message, orderId: error.orderId });
     }
 
     logger.error('Internal server error', error);
