@@ -13,6 +13,7 @@ COPY tsconfig.json .
 RUN npm run format:check
 RUN npm run build:order-service
 RUN npm test
+RUN npm run test:order-service
 
 FROM base AS runtime
 WORKDIR /opt/app
