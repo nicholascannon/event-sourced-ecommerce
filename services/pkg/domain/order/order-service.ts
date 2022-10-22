@@ -1,6 +1,7 @@
 import { ProductIntegration } from '../../integrations/product/product-integration';
 import { DomainEventStore } from '../domain-event-store';
 import { Order } from './order';
+import { AlreadyCheckedOutError, InvalidOrderItemError, OrderNotFoundError } from './order-errors';
 import { OrderEvent } from './order-events';
 
 export class OrderService {
@@ -16,7 +17,7 @@ export class OrderService {
         const order = new Order(orderId).buildFrom(events);
 
         if (order.status !== 'IN_PROGRESS') {
-            return 'ORDER_CHECKED_OUT';
+            throw new AlreadyCheckedOutError(orderId);
         }
         if (order.hasItem(itemId)) {
             return 'DUPLICATE_ITEM';
@@ -24,7 +25,7 @@ export class OrderService {
 
         const item = await this.productIntegration.getProduct(itemId);
         if (item === undefined) {
-            return 'INVALID_ITEM';
+            throw new InvalidOrderItemError(itemId);
         }
 
         await this.eventStore.save({
@@ -47,18 +48,32 @@ export class OrderService {
         return new Order(orderId).buildFrom(events);
     }
 
-    async checkout(orderId: string): Promise<CheckoutResponse> {
+    async checkout(orderId: string): Promise<void> {
         const events = await this.eventStore.loadStream<OrderEvent>(orderId, 'ORDER_FLOW');
         const order = new Order(orderId).buildFrom(events);
 
         if (order.version === 0) {
-            return 'ORDER_NOT_FOUND';
+            throw new OrderNotFoundError(orderId);
         }
         if (order.status !== 'IN_PROGRESS') {
-            return 'ALREADY_CHECKED_OUT';
+            throw new AlreadyCheckedOutError(orderId);
         }
 
         const orderItems = await Promise.all(order.items.map((itemId) => this.productIntegration.getProduct(itemId)));
+
+        // Check if we have an invalid item in the order
+        const invalidItems = orderItems.reduce<number[]>((prev, curr, idx) => {
+            if (curr === undefined) {
+                prev.push(idx);
+                return prev;
+            }
+            return prev;
+        }, []);
+
+        if (invalidItems.length !== 0) {
+            throw new InvalidOrderItemError(invalidItems.join(', '));
+        }
+
         const totalPrice = orderItems.reduce((total, item) => {
             if (item === undefined) {
                 return total;
@@ -73,11 +88,7 @@ export class OrderService {
             version: order.version + 1,
             payload: { totalPrice },
         });
-
-        return 'SUCCESS';
     }
 }
 
-type AddItemResponse = 'SUCCESS' | 'CREATED_ORDER' | 'DUPLICATE_ITEM' | 'INVALID_ITEM' | 'ORDER_CHECKED_OUT';
-
-type CheckoutResponse = 'SUCCESS' | 'ALREADY_CHECKED_OUT' | 'ORDER_NOT_FOUND';
+type AddItemResponse = 'SUCCESS' | 'CREATED_ORDER' | 'DUPLICATE_ITEM';

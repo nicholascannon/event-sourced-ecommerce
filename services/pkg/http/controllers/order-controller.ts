@@ -12,10 +12,6 @@ export class OrderController {
 
         const createItemResponse = await this.orderService.addItem(orderId, itemId);
         switch (createItemResponse) {
-            case 'ORDER_CHECKED_OUT':
-                return res.sendStatus(403);
-            case 'INVALID_ITEM':
-                return res.sendStatus(400);
             case 'DUPLICATE_ITEM':
                 return res.sendStatus(202);
             case 'CREATED_ORDER':
@@ -45,17 +41,7 @@ export class OrderController {
 
     async checkout(req: Request, res: Response) {
         const orderId = uuidValidator.validate(req.params.orderId);
-
-        const checkoutResponse = await this.orderService.checkout(orderId);
-        switch (checkoutResponse) {
-            case 'ALREADY_CHECKED_OUT':
-                return res.sendStatus(403);
-            case 'SUCCESS':
-                return res.sendStatus(200);
-            case 'ORDER_NOT_FOUND':
-                return res.sendStatus(404);
-            default:
-                assertNever(checkoutResponse);
-        }
+        await this.orderService.checkout(orderId);
+        return res.sendStatus(20);
     }
 }

@@ -1,6 +1,7 @@
 import { MemoryEventStore } from '../../data/memory/memory-event-store';
 import { MockProductIntegration, Product, ProductIntegration } from '../../integrations/product/product-integration';
 import { DomainEventStore } from '../domain-event-store';
+import { AlreadyCheckedOutError, InvalidOrderItemError, OrderNotFoundError } from './order-errors';
 import { OrderService } from './order-service';
 
 describe('OrderService', () => {
@@ -97,9 +98,13 @@ describe('OrderService', () => {
                     totalPrice: 5.0,
                 },
             });
-            const response = await service.addItem(orderId, products[0].id);
+            expect(async () => service.addItem(orderId, products[0].id)).rejects.toThrowError(AlreadyCheckedOutError);
+        });
 
-            expect(response).toBe('ORDER_CHECKED_OUT');
+        it('should error when adding an invalid item to the order', async () => {
+            expect(async () => service.addItem('order-id', 'invalid-product-id')).rejects.toThrowError(
+                InvalidOrderItemError
+            );
         });
     });
 
@@ -156,10 +161,9 @@ describe('OrderService', () => {
                 payload: { itemId: products[0].id },
             });
 
-            const response = await service.checkout(orderId);
+            await service.checkout(orderId);
             const stream = await eventStore.loadStream(orderId, 'ORDER_FLOW');
 
-            expect(response).toBe('SUCCESS');
             expect(stream[1]).toEqual({
                 streamId: orderId,
                 streamType: 'ORDER_FLOW',
@@ -190,10 +194,9 @@ describe('OrderService', () => {
                 payload: { itemId: products[1].id },
             });
 
-            const response = await service.checkout(orderId);
+            await service.checkout(orderId);
             const stream = await eventStore.loadStream(orderId, 'ORDER_FLOW');
 
-            expect(response).toBe('SUCCESS');
             expect(stream[2]).toEqual({
                 streamId: orderId,
                 streamType: 'ORDER_FLOW',
@@ -206,8 +209,7 @@ describe('OrderService', () => {
         });
 
         it('should fail to checkout an order that does not exist', async () => {
-            const response = await service.checkout('non-existent-order');
-            expect(response).toBe('ORDER_NOT_FOUND');
+            expect(async () => service.checkout('non-existent-order')).rejects.toThrowError(OrderNotFoundError);
         });
 
         it('should not checkout an order twice', async () => {
@@ -223,9 +225,40 @@ describe('OrderService', () => {
                 },
             });
 
-            const response = await service.checkout(orderId);
+            expect(async () => service.checkout(orderId)).rejects.toThrowError(AlreadyCheckedOutError);
+        });
 
-            expect(response).toBe('ALREADY_CHECKED_OUT');
+        it('should not checkout an order with invalid items', async () => {
+            const orderId = 'order-id';
+
+            // Add some valid items
+            await eventStore.save({
+                streamId: orderId,
+                streamType: 'ORDER_FLOW',
+                eventType: 'ORDER_ITEM_ADDED',
+                version: 1,
+                payload: { itemId: products[0].id },
+            });
+            await eventStore.save({
+                streamId: orderId,
+                streamType: 'ORDER_FLOW',
+                eventType: 'ORDER_ITEM_ADDED',
+                version: 2,
+                payload: { itemId: products[1].id },
+            });
+
+            // Item saved here was valid but at time of checkout it's invalid
+            await eventStore.save({
+                streamId: orderId,
+                streamType: 'ORDER_FLOW',
+                eventType: 'ORDER_ITEM_ADDED',
+                version: 3,
+                payload: {
+                    itemId: 'item-id',
+                },
+            });
+
+            expect(async () => service.checkout(orderId)).rejects.toThrowError(InvalidOrderItemError);
         });
     });
 });
