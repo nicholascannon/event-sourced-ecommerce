@@ -109,12 +109,9 @@ describe('OrderService', () => {
     });
 
     describe('getItem', () => {
-        it('should get an initial order if one doesnt exist under that id', async () => {
+        it('should return undefined if order doesnt exist', async () => {
             const order = await service.getOrder('id');
-            expect(order.id).toBe('id');
-            expect(order.items).toEqual([]);
-            expect(order.version).toBe(0);
-            expect(order.status).toBe('IN_PROGRESS');
+            expect(order).toBeUndefined();
         });
 
         it('should get a hydrated order when events exist for that order id', async () => {
@@ -141,10 +138,10 @@ describe('OrderService', () => {
             });
 
             const order = await service.getOrder(orderId);
-            expect(order.id).toBe(orderId);
-            expect(order.items).toEqual([products[0].id]);
-            expect(order.version).toBe(2);
-            expect(order.status).toBe('CHECKED_OUT');
+            expect(order?.id).toBe(orderId);
+            expect(order?.items).toEqual([products[0].id]);
+            expect(order?.version).toBe(2);
+            expect(order?.status).toBe('CHECKED_OUT');
         });
     });
 

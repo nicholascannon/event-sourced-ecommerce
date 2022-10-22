@@ -43,9 +43,14 @@ export class OrderService {
         return 'SUCCESS';
     }
 
-    async getOrder(orderId: string): Promise<Order> {
+    async getOrder(orderId: string): Promise<Order | undefined> {
         const events = await this.eventStore.loadStream<OrderEvent>(orderId, 'ORDER_FLOW');
-        return new Order(orderId).buildFrom(events);
+        const order = new Order(orderId).buildFrom(events);
+
+        if (order.version === 0) {
+            return undefined;
+        }
+        return order;
     }
 
     async checkout(orderId: string): Promise<void> {

@@ -27,7 +27,7 @@ export class OrderController {
         const orderId = uuidValidator.validate(req.params.orderId);
         const order = await this.orderService.getOrder(orderId);
 
-        if (order.version === 0) {
+        if (order === undefined) {
             return res.sendStatus(404);
         }
 
