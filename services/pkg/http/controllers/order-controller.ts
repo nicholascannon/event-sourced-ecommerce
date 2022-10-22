@@ -42,6 +42,6 @@ export class OrderController {
     async checkout(req: Request, res: Response) {
         const orderId = uuidValidator.validate(req.params.orderId);
         await this.orderService.checkout(orderId);
-        return res.sendStatus(20);
+        return res.sendStatus(200);
     }
 }
