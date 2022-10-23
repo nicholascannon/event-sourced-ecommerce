@@ -10,7 +10,7 @@
         "test:order-service": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' npx jest ./order-service/test",
         "format:check": "prettier --check .",
         "format:write": "prettier --write .",
-        "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' npx jest",
+        "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' npx jest ./pkg",
         "test:watch": "npm run test -- --watch"
     },
     "devDependencies": {
