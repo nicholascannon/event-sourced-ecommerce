@@ -4,6 +4,8 @@ An event sourced ecommerce system for learning and development.
 
 Project status: **still in progress**.
 
+**STACK: TypeScript, Node.js, React, Postgres, Docker, ESBuild, Flyway.**
+
 ## Project Goals
 
 -   Create an order
