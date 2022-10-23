@@ -7,7 +7,7 @@ export class AlreadyCheckedOutError extends Error {
 
 export class InvalidOrderItemError extends Error {
     constructor(public readonly itemIds: string[]) {
-        super('Invalid items in order');
+        super('Invalid order item');
         this.name = this.constructor.name;
     }
 }
