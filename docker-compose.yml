@@ -56,3 +56,19 @@ services:
         condition: service_completed_successfully
     profiles:
       - with-services
+
+  checkout-pm:
+    build:
+      dockerfile: checkout-pm.dockerfile
+      context: ./services
+    environment:
+      DB_HOST: event-store
+      DB_USER: order_service
+      DB_PASSWORD: password1
+      DB_PORT: 5432
+      DB_DATABASE: ecom
+    depends_on:
+      flyway:
+        condition: service_completed_successfully
+    profiles:
+      - with-services
