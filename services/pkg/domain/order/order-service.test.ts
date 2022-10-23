@@ -108,43 +108,6 @@ describe('OrderService', () => {
         });
     });
 
-    describe('getItem', () => {
-        it('should return undefined if order doesnt exist', async () => {
-            const order = await service.getOrder('id');
-            expect(order).toBeUndefined();
-        });
-
-        it('should get a hydrated order when events exist for that order id', async () => {
-            const orderId = 'order-id';
-
-            // Add item
-            await eventStore.save({
-                streamId: orderId,
-                streamType: 'ORDER_FLOW',
-                eventType: 'ORDER_ITEM_ADDED',
-                version: 1,
-                payload: { itemId: products[0].id },
-            });
-
-            // Checkout order
-            await eventStore.save({
-                streamId: orderId,
-                streamType: 'ORDER_FLOW',
-                eventType: 'ORDER_CHECKED_OUT',
-                version: 2,
-                payload: {
-                    totalPrice: 5.0,
-                },
-            });
-
-            const order = await service.getOrder(orderId);
-            expect(order?.id).toBe(orderId);
-            expect(order?.items).toEqual([products[0].id]);
-            expect(order?.version).toBe(2);
-            expect(order?.status).toBe('CHECKED_OUT');
-        });
-    });
-
     describe('checkout', () => {
         it('should checkout a valid order with one item', async () => {
             const orderId = 'order-id';
