@@ -34,7 +34,7 @@ docker-compose --profile with-services up --build
 Or run locally with hot reload:
 
 ```sh
-docker-compose up --bulid --detach
+docker-compose up --build --detach
 cd services
 npm run watch:<SERIVCE_NAME>
 ```
