@@ -78,6 +78,6 @@ services/           # Backend services code
 README.md           # File you're reading now
 ```
 
-## Recommended Reading
+## Further Reading
 
 -   [Order events overview](./docs/events.md)
