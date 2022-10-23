@@ -23,6 +23,25 @@ I have made the following out of scope for this project to keep things simple:
 -   User specific stuff e.g. orders won't have a customer id attached
 -   Handling product price changes (e.g. concurrently setting the price while a customer checks out)
 
+## How to run locally
+
+Run everything in Docker:
+
+```sh
+docker-compose --profile with-services up --build
+```
+
+Or run locally with hot reload:
+
+```sh
+docker-compose up --bulid --detach
+cd services
+npm run watch:<SERIVCE_NAME>
+```
+
+Each service has a `watch` command defined in the `package.json`.
+Run each of these watch commands in a different terminal to get hot reloading.
+
 ## Services Overview
 
 -   **Order Service**: A web API responsible for creating, adding items to, viewing and checking out orders.

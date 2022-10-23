@@ -55,4 +55,4 @@ services:
       flyway:
         condition: service_completed_successfully
     profiles:
-      - service
+      - with-services
