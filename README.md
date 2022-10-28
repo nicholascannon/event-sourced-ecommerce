@@ -6,6 +6,10 @@ Project status: **still in progress**.
 
 **STACK: TypeScript, Node.js, React, Postgres, Docker, ESBuild, Flyway.**
 
+**IMPORTANT:** The way I've written this system is not necessarily indicative of what I think is the _best way_ to solve this problem.
+I've tried a few paradigms, techniques and tools (e.g. a bit more Object Orientated instead of Functional) for the sake of learning and example.
+Each of these decisions obviously carry tradeoffs with it.
+
 ## Project Goals
 
 -   Create an order
