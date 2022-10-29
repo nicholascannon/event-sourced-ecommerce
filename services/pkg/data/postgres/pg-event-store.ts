@@ -1,18 +1,22 @@
 import pg from 'pg';
 import { DomainEvent, DomainEventStore } from '../../domain/domain-event-store';
+import { PersistedEvent } from '../../event-store/events';
 
 export class PgEventStore implements DomainEventStore {
     constructor(private readonly pool: pg.Pool) {}
 
-    async loadStream<E extends DomainEvent>(id: string, type: E['streamType']): Promise<E[]> {
+    async loadStream<E extends DomainEvent>(id: string, type: E['streamType']): Promise<PersistedEvent<E>[]> {
         const { rows: events } = await this.pool.query<DomainEvent>(
             `
                 SELECT
+                    id,
+                    inserting_txid as "insertingTXID",
                     stream_id AS "streamId",
                     version,
                     stream_type AS "streamType",
                     event_type AS "eventType",
-                    payload
+                    payload,
+                    timestamp
                 FROM order_context.events
                 WHERE
                     stream_id=$1 AND
@@ -22,8 +26,8 @@ export class PgEventStore implements DomainEventStore {
             [id, type]
         );
 
-        // We can use `as E[]` here as we know that the query is filtering based on `stream_type`
-        return events as E[];
+        // We can use `as PersistedEvent<E>[]` here as we know that the query is filtering based on `stream_type`
+        return events as PersistedEvent<E>[];
     }
 
     async save({ streamId, version, streamType, eventType, payload }: DomainEvent) {
