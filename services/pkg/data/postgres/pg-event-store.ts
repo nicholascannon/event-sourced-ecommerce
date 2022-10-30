@@ -50,10 +50,10 @@ export class PgEventStore implements DomainEventStore {
                 WHERE
                     (inserting_txid, id) > ($1, $2) AND
                     inserting_txid < txid_current()
-                ORDER BY (inserting_txid, id) ASC
+                ORDER BY inserting_txid, id ASC
                 LIMIT $3;
             `,
-            [id, insertingTxid, batchSize]
+            [insertingTxid, id, batchSize]
         );
 
         return events;
