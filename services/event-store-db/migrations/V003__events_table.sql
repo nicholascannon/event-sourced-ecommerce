@@ -1,5 +1,5 @@
 CREATE TABLE order_context.events (
-    id SERIAL NOT NULL,
+    id BIGSERIAL NOT NULL,
     inserting_txid BIGINT NOT NULL DEFAULT txid_current(),
 
     stream_id VARCHAR(50) NOT NULL,
@@ -10,8 +10,8 @@ CREATE TABLE order_context.events (
 
     timestamp TIMESTAMPTZ NOT NULL DEFAULT now(),
 
-    CONSTRAINT non_negative_version CHECK (version > 0),
-    CONSTRAINT unique_stream_event UNIQUE (stream_type, stream_id, version)
+    PRIMARY KEY (stream_type, stream_id, version),
+    CONSTRAINT non_negative_version CHECK (version > 0)
 );
 
 -- Allow PMs to tail all events on the event store efficiently
