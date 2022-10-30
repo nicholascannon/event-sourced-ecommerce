@@ -1,9 +1,10 @@
 import pg from 'pg';
+import { Bookmark } from '../../event-store/bookmark';
 import { BookmarkRepo } from '../../process-manager/bookmark';
 import { AjvValidator } from '../../shared/validation';
 
-export class PgBookmarkRepo implements BookmarkRepo<PgBookmark> {
-    private static validator = new AjvValidator<PgBookmark>({
+export class PgBookmarkRepo implements BookmarkRepo<Bookmark> {
+    private static validator = new AjvValidator<Bookmark>({
         type: 'object',
         properties: {
             id: { type: 'string' },
@@ -15,8 +16,8 @@ export class PgBookmarkRepo implements BookmarkRepo<PgBookmark> {
 
     constructor(private readonly name: string, private readonly pool: pg.Pool) {}
 
-    async get(): Promise<PgBookmark> {
-        const { rows } = await this.pool.query<{ value: PgBookmark }>(
+    async get(): Promise<Bookmark> {
+        const { rows } = await this.pool.query<{ value: Bookmark }>(
             `
                 SELECT
                     value
@@ -32,7 +33,7 @@ export class PgBookmarkRepo implements BookmarkRepo<PgBookmark> {
         return rows[0].value;
     }
 
-    async set(bookmark: PgBookmark) {
+    async set(bookmark: Bookmark) {
         PgBookmarkRepo.validator.validate(bookmark);
         await this.pool.query(
             `
@@ -44,9 +45,4 @@ export class PgBookmarkRepo implements BookmarkRepo<PgBookmark> {
             [this.name, bookmark]
         );
     }
-}
-
-export interface PgBookmark {
-    id: string;
-    insertingTxid: string;
 }

@@ -1,12 +1,14 @@
 import pg from 'pg';
 import { DomainEvent, DomainEventStore } from '../../domain/domain-event-store';
+import { OrderEvent } from '../../domain/order/order-events';
+import { Bookmark } from '../../event-store/bookmark';
 import { PersistedEvent } from '../../event-store/events';
 
 export class PgEventStore implements DomainEventStore {
     constructor(private readonly pool: pg.Pool) {}
 
     async loadStream<E extends DomainEvent>(id: string, type: E['streamType']): Promise<PersistedEvent<E>[]> {
-        const { rows: events } = await this.pool.query<DomainEvent>(
+        const { rows: events } = await this.pool.query<PersistedEvent<DomainEvent>>(
             `
                 SELECT
                     id,
@@ -28,6 +30,33 @@ export class PgEventStore implements DomainEventStore {
 
         // We can use `as PersistedEvent<E>[]` here as we know that the query is filtering based on `stream_type`
         return events as PersistedEvent<E>[];
+    }
+
+    async loadEvents(from: Bookmark, batchSize: number): Promise<PersistedEvent<OrderEvent>[]> {
+        const { id, insertingTxid } = from;
+
+        const { rows: events } = await this.pool.query<PersistedEvent<DomainEvent>>(
+            `
+                SELECT
+                    id,
+                    inserting_txid as "insertingTXID",
+                    stream_id AS "streamId",
+                    version,
+                    stream_type AS "streamType",
+                    event_type AS "eventType",
+                    payload,
+                    timestamp
+                FROM order_context.events
+                WHERE
+                    (inserting_txid, id) > ($1, $2) AND
+                    inserting_txid < txid_current()
+                ORDER BY (inserting_txid, id) ASC
+                LIMIT $3;
+            `,
+            [id, insertingTxid, batchSize]
+        );
+
+        return events;
     }
 
     async save({ streamId, version, streamType, eventType, payload }: DomainEvent) {
