@@ -21,6 +21,10 @@ export async function startProcessManager<E extends BaseEvent>(
         }
 
         await consumer.consumeEvents(events);
-        logger.info('Processed batch', { eventsProcessed: events.length });
+        logger.info('Processed batch', {
+            eventsProcessed: events.length,
+            from: events[0].id,
+            to: events[events.length - 1].id,
+        });
     }
 }
