@@ -1,5 +1,7 @@
 import { DomainEvent, DomainEventStore } from '../../domain/domain-event-store';
 import { OrderEvent } from '../../domain/order/order-events';
+import { Bookmark } from '../../event-store/bookmark';
+import { PersistedEvent } from '../../event-store/events';
 
 export class MemoryEventStore implements DomainEventStore {
     private events: DomainEvent[] = [];
@@ -10,8 +12,13 @@ export class MemoryEventStore implements DomainEventStore {
         }
     }
 
-    async loadStream<E extends OrderEvent>(id: string, streamType: E['streamType']): Promise<E[]> {
-        return this.events.filter((e) => e.streamId === id && e.streamType === streamType) as E[];
+    async loadStream<E extends OrderEvent>(id: string, streamType: E['streamType']): Promise<PersistedEvent<E>[]> {
+        return this.events.filter((e) => e.streamId === id && e.streamType === streamType) as PersistedEvent<E>[];
+    }
+
+    async loadEvents(_from: Bookmark, _batchSize: number): Promise<PersistedEvent<OrderEvent>[]> {
+        // TODO: implement the following if required for tests
+        throw new Error('Has not been implemented');
     }
 
     async save(event: OrderEvent) {
