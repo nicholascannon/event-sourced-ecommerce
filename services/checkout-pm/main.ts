@@ -1,8 +1,15 @@
 import { createPool } from '../pkg/data/postgres/db';
+import { PgBookmarkRepo } from '../pkg/data/postgres/pg-bookmark-repo';
+import { PgEventStore } from '../pkg/data/postgres/pg-event-store';
+import { startProcessManager } from '../pkg/process-manager/pm-coordinator';
+import { BookmarkedEventReader } from '../pkg/process-manager/reader';
 import { lifecycle } from '../pkg/shared/lifecycle';
 import { logger } from '../pkg/shared/logger';
 import { CONFIG } from './config';
-import { startCheckoutPm } from './pm';
+import { CheckoutEventConsumer } from './consumer';
+
+const PM_NAME = 'checkout-pm';
+const BATCH_SIZE = 10;
 
 process
     .on('uncaughtException', (error) => {
@@ -19,6 +26,8 @@ process
     });
 
 logger.info('Config', {
+    pmName: PM_NAME,
+    batchSize: BATCH_SIZE,
     database: {
         host: CONFIG.database.host,
         user: CONFIG.database.user,
@@ -30,4 +39,11 @@ logger.info('Config', {
 const pool = createPool(CONFIG.database);
 lifecycle.on('close', () => pool.end());
 
-startCheckoutPm();
+const eventStore = new PgEventStore(pool);
+const bookmarkRepo = new PgBookmarkRepo(PM_NAME, pool);
+const startingBookmark = await bookmarkRepo.get();
+
+const reader = new BookmarkedEventReader(startingBookmark, eventStore);
+const consumer = new CheckoutEventConsumer(bookmarkRepo);
+
+startProcessManager(reader, consumer, { batchSize: BATCH_SIZE, delay: 1_000 });
