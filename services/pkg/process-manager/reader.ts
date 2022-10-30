@@ -25,7 +25,10 @@ export class BookmarkedEventReader<E extends BaseEvent> implements Reader<E> {
     async readEvents(batchSize: number): Promise<PersistedEvent<E>[]> {
         const events = await this.eventStore.loadEvents(this.currentBookmark, batchSize);
         if (events.length > 0) {
-            this.currentBookmark = { id: events[0].id, insertingTxid: events[0].insertingTXID };
+            this.currentBookmark = {
+                id: events[events.length - 1].id,
+                insertingTxid: events[events.length - 1].insertingTXID,
+            };
         }
 
         return events;
