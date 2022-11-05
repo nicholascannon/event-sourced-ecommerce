@@ -18,7 +18,7 @@ CREATE TABLE order_context.events (
 CREATE INDEX events_txid_id_index ON events(inserting_txid, id);
 
 -- No UPDATE or DELETE on event store!
-GRANT SELECT, INSERT ON order_context.events TO order_service;
-GRANT USAGE, SELECT ON SEQUENCE events_id_seq TO order_service;
-GRANT SELECT ON order_context.events TO order_process_manager;
-GRANT SELECT ON SEQUENCE events_id_seq TO order_process_manager;
+GRANT SELECT, INSERT ON order_context.events TO order_writer;
+GRANT USAGE, SELECT ON SEQUENCE events_id_seq TO order_writer;
+GRANT SELECT ON order_context.events TO order_reader;
+GRANT SELECT ON SEQUENCE events_id_seq TO order_reader;

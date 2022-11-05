@@ -3,4 +3,4 @@ CREATE TABLE order_context.bookmarks (
     value TEXT NOT NULL
 );
 
-GRANT SELECT, INSERT, UPDATE ON order_context.bookmarks TO order_process_manager;
+GRANT SELECT, INSERT, UPDATE ON order_context.bookmarks TO order_reader;

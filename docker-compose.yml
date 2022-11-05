@@ -44,7 +44,7 @@ services:
     environment:
       PORT: 8000
       DB_HOST: event-store
-      DB_USER: order_service
+      DB_USER: order_writer
       DB_PASSWORD: password1
       DB_PORT: 5432
       DB_DATABASE: ecom
@@ -63,7 +63,7 @@ services:
       context: ./services
     environment:
       DB_HOST: event-store
-      DB_USER: order_process_manager
+      DB_USER: order_reader
       DB_PASSWORD: password2
       DB_PORT: 5432
       DB_DATABASE: ecom
