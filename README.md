@@ -86,3 +86,5 @@ README.md           # File you're reading now
 ## Further Reading
 
 -   [Order events overview](./docs/events.md)
+-   [Client overview](./client/README.md)
+-   [Product service mock](./mocks/product-service/README.md)
