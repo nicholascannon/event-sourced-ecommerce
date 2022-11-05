@@ -3,7 +3,8 @@ import { DomainEventStore } from '../../pkg/domain/domain-event-store';
 import { MockProductIntegration } from '../../pkg/integrations/product/product-integration';
 import { createApp } from '../app';
 import request from 'supertest';
-import { ORDER_ID, products } from './test-data';
+import { ORDER_ID, products } from '../../pkg/test/test-data';
+import { removePersistedProps } from '../../pkg/event-store/util';
 
 describe('/v1/orders/:orderId/checkout', () => {
     let app: Express.Application;
@@ -37,7 +38,7 @@ describe('/v1/orders/:orderId/checkout', () => {
         });
 
         const { status } = await request(app).post(`/v1/orders/${ORDER_ID}/checkout`);
-        const stream = await eventStore.loadStream(ORDER_ID, 'ORDER_FLOW');
+        const stream = removePersistedProps(await eventStore.loadStream(ORDER_ID, 'ORDER_FLOW'));
 
         expect(status).toBe(200);
         expect(stream[2]).toEqual({
@@ -70,7 +71,7 @@ describe('/v1/orders/:orderId/checkout', () => {
         });
 
         const { status, body } = await request(app).post(`/v1/orders/${ORDER_ID}/checkout`);
-        const stream = await eventStore.loadStream(ORDER_ID, 'ORDER_FLOW');
+        const stream = removePersistedProps(await eventStore.loadStream(ORDER_ID, 'ORDER_FLOW'));
 
         expect(status).toBe(403);
         expect(body).toEqual({ message: 'Cannot complete action on checked out order', orderId: ORDER_ID });
@@ -102,7 +103,7 @@ describe('/v1/orders/:orderId/checkout', () => {
         });
 
         const { status, body } = await request(app).post(`/v1/orders/${ORDER_ID}/checkout`);
-        const stream = await eventStore.loadStream(ORDER_ID, 'ORDER_FLOW');
+        const stream = removePersistedProps(await eventStore.loadStream(ORDER_ID, 'ORDER_FLOW'));
 
         expect(status).toBe(400);
         expect(body).toEqual({ message: 'Invalid order item', itemIds: [invalidItemId] });

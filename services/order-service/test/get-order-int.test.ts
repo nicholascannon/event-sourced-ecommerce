@@ -3,7 +3,7 @@ import { DomainEventStore } from '../../pkg/domain/domain-event-store';
 import { MockProductIntegration } from '../../pkg/integrations/product/product-integration';
 import { createApp } from '../app';
 import request from 'supertest';
-import { ORDER_ID, products } from './test-data';
+import { ORDER_ID, products } from '../../pkg/test/test-data';
 
 describe('/v1/orders/:orderId', () => {
     let app: Express.Application;

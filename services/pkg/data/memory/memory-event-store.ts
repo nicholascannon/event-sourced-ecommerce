@@ -4,11 +4,17 @@ import { Bookmark } from '../../event-store/bookmark';
 import { PersistedEvent } from '../../event-store/events';
 
 export class MemoryEventStore implements DomainEventStore {
-    private events: DomainEvent[] = [];
+    private events: PersistedEvent<DomainEvent>[] = [];
 
     constructor(seedData?: DomainEvent[]) {
         if (seedData) {
-            this.events.push(...seedData);
+            const persistedSeedData = seedData.map<PersistedEvent<DomainEvent>>((e, idx) => ({
+                id: String(idx),
+                insertingTXID: String(idx),
+                ...e,
+                timestamp: new Date(),
+            }));
+            this.events.push(...persistedSeedData);
         }
     }
 
@@ -16,9 +22,8 @@ export class MemoryEventStore implements DomainEventStore {
         return this.events.filter((e) => e.streamId === id && e.streamType === streamType) as PersistedEvent<E>[];
     }
 
-    async loadEvents(_from: Bookmark, _batchSize: number): Promise<PersistedEvent<OrderEvent>[]> {
-        // TODO: implement the following if required for tests
-        throw new Error('Has not been implemented');
+    async loadEvents(from: Bookmark, batchSize: number): Promise<PersistedEvent<OrderEvent>[]> {
+        return this.events.filter((e) => e.id > from.id).slice(0, batchSize);
     }
 
     async save(event: OrderEvent) {
@@ -29,6 +34,11 @@ export class MemoryEventStore implements DomainEventStore {
             throw new Error('Event conflict');
         }
 
-        this.events.push(event);
+        this.events.push({
+            id: String(this.events.length + 1),
+            insertingTXID: String(this.events.length + 1),
+            timestamp: new Date(),
+            ...event,
+        });
     }
 }

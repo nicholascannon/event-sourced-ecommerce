@@ -1,4 +1,4 @@
-import { Product } from '../../pkg/integrations/product/product-integration';
+import { Product } from '../integrations/product/product-integration';
 
 export const products: Product[] = [
     {

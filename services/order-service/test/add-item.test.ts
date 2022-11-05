@@ -3,7 +3,8 @@ import { DomainEventStore } from '../../pkg/domain/domain-event-store';
 import { MockProductIntegration } from '../../pkg/integrations/product/product-integration';
 import { createApp } from '../app';
 import request from 'supertest';
-import { INVALID_ITEM_ID, ORDER_ID, products } from './test-data';
+import { INVALID_ITEM_ID, ORDER_ID, products } from '../../pkg/test/test-data';
+import { removePersistedProps } from '../../pkg/event-store/util';
 
 describe('/v1/orders/:orderId/add/:itemId', () => {
     let app: Express.Application;
@@ -26,7 +27,7 @@ describe('/v1/orders/:orderId/add/:itemId', () => {
 
     it('should add item and create order if one doesnt exist under that UUID', async () => {
         const { status } = await request(app).post(`/v1/orders/${ORDER_ID}/add/${products[0].id}`);
-        const stream = await eventStore.loadStream(ORDER_ID, 'ORDER_FLOW');
+        const stream = removePersistedProps(await eventStore.loadStream(ORDER_ID, 'ORDER_FLOW'));
 
         expect(status).toBe(201);
         expect(stream).toEqual([
@@ -51,7 +52,7 @@ describe('/v1/orders/:orderId/add/:itemId', () => {
         });
 
         const { status } = await request(app).post(`/v1/orders/${ORDER_ID}/add/${products[1].id}`);
-        const stream = await eventStore.loadStream(ORDER_ID, 'ORDER_FLOW');
+        const stream = removePersistedProps(await eventStore.loadStream(ORDER_ID, 'ORDER_FLOW'));
 
         expect(status).toBe(200);
         expect(stream[1]).toEqual({
@@ -74,7 +75,7 @@ describe('/v1/orders/:orderId/add/:itemId', () => {
         });
 
         const { status } = await request(app).post(`/v1/orders/${ORDER_ID}/add/${products[0].id}`);
-        const stream = await eventStore.loadStream(ORDER_ID, 'ORDER_FLOW');
+        const stream = removePersistedProps(await eventStore.loadStream(ORDER_ID, 'ORDER_FLOW'));
 
         expect(status).toBe(202);
         expect(stream.length).toBe(1); // no events added
@@ -92,7 +93,7 @@ describe('/v1/orders/:orderId/add/:itemId', () => {
         });
 
         const { status, body } = await request(app).post(`/v1/orders/${ORDER_ID}/add/${products[0].id}`);
-        const stream = await eventStore.loadStream(ORDER_ID, 'ORDER_FLOW');
+        const stream = removePersistedProps(await eventStore.loadStream(ORDER_ID, 'ORDER_FLOW'));
 
         expect(status).toBe(403);
         expect(body).toEqual({ message: 'Cannot complete action on checked out order', orderId: ORDER_ID });
