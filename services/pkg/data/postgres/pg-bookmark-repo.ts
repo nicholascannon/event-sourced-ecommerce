@@ -17,7 +17,7 @@ export class PgBookmarkRepo implements BookmarkRepo<Bookmark> {
     constructor(private readonly name: string, private readonly pool: pg.Pool) {}
 
     async get(): Promise<Bookmark> {
-        const { rows } = await this.pool.query<{ value: Bookmark }>(
+        const { rows } = await this.pool.query<{ value: string }>(
             `
                 SELECT
                     value
@@ -30,7 +30,7 @@ export class PgBookmarkRepo implements BookmarkRepo<Bookmark> {
         if (rows.length === 0) {
             return { id: '0', insertingTxid: '0' };
         }
-        return rows[0].value;
+        return JSON.parse(rows[0].value);
     }
 
     async set(bookmark: Bookmark) {
