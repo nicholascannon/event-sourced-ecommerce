@@ -88,3 +88,15 @@ README.md           # File you're reading now
 -   [Order events overview](./docs/events.md)
 -   [Client overview](./client/README.md)
 -   [Product service mock](./mocks/product-service/README.md)
+
+## Quick links
+
+Not farmiliar with the structure of this project?
+Here's some quick links to jump to the interesting stuff:
+
+-   [Order service express app](./services/order-service/app.ts) (a good starting point)
+-   [Order service](./services/pkg/domain/order/order-service.ts)
+-   [Order aggregate](./services/pkg/domain/order/order.ts)
+-   [Order HTTP controller](./services/pkg/http/controllers/order-controller.ts)
+-   [Order events](./services/pkg/domain/order/order-events.ts)
+-   [Postgres eventstore](./services/pkg/data/postgres/pg-event-store.ts)
