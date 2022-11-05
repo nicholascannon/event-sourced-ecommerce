@@ -1,6 +1,6 @@
 import { Bookmark } from '../event-store/bookmark';
 import { BaseEvent, PersistedEvent } from '../event-store/events';
-import { EventStore } from '../event-store/generic-event-store';
+import { EventStoreReader } from '../event-store/generic-event-store';
 
 export interface Reader<E extends BaseEvent> {
     readEvents: (batchSize: number) => Promise<PersistedEvent<E>[]>;
@@ -13,7 +13,7 @@ export interface Reader<E extends BaseEvent> {
 export class BookmarkedEventReader<E extends BaseEvent> implements Reader<E> {
     private currentBookmark: Bookmark;
 
-    constructor(startingBookmark: Bookmark, private readonly eventStore: EventStore<E>) {
+    constructor(startingBookmark: Bookmark, private readonly eventStoreReader: EventStoreReader<E>) {
         this.currentBookmark = startingBookmark;
     }
 
@@ -23,7 +23,7 @@ export class BookmarkedEventReader<E extends BaseEvent> implements Reader<E> {
      * events by design.
      */
     async readEvents(batchSize: number): Promise<PersistedEvent<E>[]> {
-        const events = await this.eventStore.loadEvents(this.currentBookmark, batchSize);
+        const events = await this.eventStoreReader.loadEvents(this.currentBookmark, batchSize);
         if (events.length > 0) {
             this.currentBookmark = {
                 id: events[events.length - 1].id,

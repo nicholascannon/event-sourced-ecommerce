@@ -1,7 +1,7 @@
 import { Bookmark } from './bookmark';
 import { BaseEvent, PersistedEvent } from './events';
 
-export interface EventStore<Event extends BaseEvent> {
+export interface EventStoreReader<Event extends BaseEvent> {
     /**
      * Loads a stream of events and narrows the type down to events only with
      * that stream type.
@@ -13,6 +13,10 @@ export interface EventStore<Event extends BaseEvent> {
      * stream id or stream type.
      */
     loadEvents: (from: Bookmark, batchSize: number) => Promise<PersistedEvent<Event>[]>;
+}
 
+export interface EventStoreWriter<Event extends BaseEvent> {
     save: (event: Event) => Promise<void>;
 }
+
+export interface EventStore<Event extends BaseEvent> extends EventStoreReader<Event>, EventStoreWriter<Event> {}
