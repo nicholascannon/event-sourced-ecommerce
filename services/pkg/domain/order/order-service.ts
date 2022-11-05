@@ -33,7 +33,7 @@ export class OrderService {
             streamType: 'ORDER_FLOW',
             eventType: 'ORDER_ITEM_ADDED',
             version: order.version + 1,
-            payload: { itemId },
+            payload: { itemId: item.id, name: item.name },
         });
 
         if (order.version === 0) {
@@ -64,12 +64,12 @@ export class OrderService {
             throw new AlreadyCheckedOutError(orderId);
         }
 
-        const orderItems = await Promise.all(order.items.map((itemId) => this.productIntegration.getProduct(itemId)));
+        const orderItems = await Promise.all(order.items.map(({ id }) => this.productIntegration.getProduct(id)));
 
         // Check if we have an invalid item in the order
         const invalidItems = orderItems.reduce<string[]>((prev, curr, idx) => {
             if (curr === undefined) {
-                prev.push(order.items[idx]);
+                prev.push(order.items[idx].id);
                 return prev;
             }
             return prev;

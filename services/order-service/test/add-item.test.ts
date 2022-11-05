@@ -35,7 +35,7 @@ describe('/v1/orders/:orderId/add/:itemId', () => {
                 streamType: 'ORDER_FLOW',
                 eventType: 'ORDER_ITEM_ADDED',
                 version: 1,
-                payload: { itemId: products[0].id },
+                payload: { itemId: products[0].id, name: products[0].name },
             },
         ]);
     });
@@ -47,7 +47,7 @@ describe('/v1/orders/:orderId/add/:itemId', () => {
             streamType: 'ORDER_FLOW',
             eventType: 'ORDER_ITEM_ADDED',
             version: 1,
-            payload: { itemId: products[0].id },
+            payload: { itemId: products[0].id, name: products[0].name },
         });
 
         const { status } = await request(app).post(`/v1/orders/${ORDER_ID}/add/${products[1].id}`);
@@ -59,7 +59,7 @@ describe('/v1/orders/:orderId/add/:itemId', () => {
             streamType: 'ORDER_FLOW',
             eventType: 'ORDER_ITEM_ADDED',
             version: 2,
-            payload: { itemId: products[1].id },
+            payload: { itemId: products[1].id, name: products[1].name },
         });
     });
 
@@ -70,7 +70,7 @@ describe('/v1/orders/:orderId/add/:itemId', () => {
             streamType: 'ORDER_FLOW',
             eventType: 'ORDER_ITEM_ADDED',
             version: 1,
-            payload: { itemId: products[0].id },
+            payload: { itemId: products[0].id, name: products[0].name },
         });
 
         const { status } = await request(app).post(`/v1/orders/${ORDER_ID}/add/${products[0].id}`);

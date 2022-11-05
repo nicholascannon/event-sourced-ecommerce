@@ -26,14 +26,14 @@ describe('/v1/orders/:orderId/checkout', () => {
             streamType: 'ORDER_FLOW',
             eventType: 'ORDER_ITEM_ADDED',
             version: 1,
-            payload: { itemId: products[0].id },
+            payload: { itemId: products[0].id, name: products[0].name },
         });
         await eventStore.save({
             streamId: ORDER_ID,
             streamType: 'ORDER_FLOW',
             eventType: 'ORDER_ITEM_ADDED',
             version: 2,
-            payload: { itemId: products[1].id },
+            payload: { itemId: products[1].id, name: products[1].name },
         });
 
         const { status } = await request(app).post(`/v1/orders/${ORDER_ID}/checkout`);
@@ -86,7 +86,7 @@ describe('/v1/orders/:orderId/checkout', () => {
             streamType: 'ORDER_FLOW',
             eventType: 'ORDER_ITEM_ADDED',
             version: 1,
-            payload: { itemId: products[0].id },
+            payload: { itemId: products[0].id, name: products[0].name },
         });
 
         // Item saved here was valid but at time of checkout it's invalid
@@ -97,6 +97,7 @@ describe('/v1/orders/:orderId/checkout', () => {
             version: 3,
             payload: {
                 itemId: invalidItemId,
+                name: 'invalid-item-name',
             },
         });
 

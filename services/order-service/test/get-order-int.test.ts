@@ -31,7 +31,7 @@ describe('/v1/orders/:orderId', () => {
             streamType: 'ORDER_FLOW',
             eventType: 'ORDER_ITEM_ADDED',
             version: 1,
-            payload: { itemId: products[0].id },
+            payload: { itemId: products[0].id, name: products[0].name },
         });
 
         // Checkout order
@@ -50,7 +50,7 @@ describe('/v1/orders/:orderId', () => {
         expect(body).toEqual({
             id: ORDER_ID,
             status: 'CHECKED_OUT',
-            items: [products[0].id],
+            items: [{ id: products[0].id, name: products[0].name }],
             version: 2,
         });
     });

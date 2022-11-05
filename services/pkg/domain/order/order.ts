@@ -4,12 +4,12 @@ import { AddItemEvent, CheckedOutEvent, OrderEvent } from './order-events';
 export class Order {
     private _version: number;
     private _status: OrderStatus;
-    private _items: Set<string>;
+    private _items: Array<{ id: string; name: string }>;
     private _totalPrice: number | undefined;
 
     constructor(private readonly _id: string) {
         this._version = 0;
-        this._items = new Set();
+        this._items = [];
         this._status = 'IN_PROGRESS';
     }
 
@@ -34,11 +34,11 @@ export class Order {
     }
 
     hasItem(itemId: string): boolean {
-        return this._items.has(itemId);
+        return Boolean(this._items.find(({ id }) => id === itemId));
     }
 
-    public get items(): string[] {
-        return Array.from(this._items.values());
+    public get items(): Array<{ id: string; name: string }> {
+        return this._items;
     }
 
     buildFrom(events: OrderEvent[]): Order {
@@ -64,7 +64,7 @@ export class Order {
     }
 
     private handleOrderItemAdded(event: AddItemEvent) {
-        this._items.add(event.payload.itemId);
+        this._items.push({ id: event.payload.itemId, name: event.payload.name });
     }
 
     private handleOrderCheckedOut(event: CheckedOutEvent) {

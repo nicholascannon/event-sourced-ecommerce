@@ -18,6 +18,7 @@ describe('Order', () => {
                 streamType: 'ORDER_FLOW',
                 payload: {
                     itemId: 'item-id',
+                    name: 'item1',
                 },
             },
             {
@@ -27,12 +28,17 @@ describe('Order', () => {
                 streamType: 'ORDER_FLOW',
                 payload: {
                     itemId: 'item-id-2',
+                    name: 'item2',
                 },
             },
         ]);
 
         expect(order.hasItem('item-id')).toBeTruthy();
         expect(order.hasItem('item-id-2')).toBeTruthy();
+        expect(order.items).toEqual([
+            { id: 'item-id', name: 'item1' },
+            { id: 'item-id-2', name: 'item2' },
+        ]);
         expect(order.id).toBe('order-id');
         expect(order.version).toBe(2);
     });
