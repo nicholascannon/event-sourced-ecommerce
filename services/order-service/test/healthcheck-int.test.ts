@@ -10,7 +10,7 @@ describe('/healthcheck', () => {
 
     beforeEach(() => {
         eventStore = new MemoryEventStore();
-        app = createApp(eventStore, new MockProductIntegration([]));
+        app = createApp(eventStore, new MockProductIntegration([]), { logHttpRequests: false });
     });
 
     it('should return healthy', async () => {

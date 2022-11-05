@@ -11,7 +11,7 @@ describe('/v1/orders/:orderId', () => {
 
     beforeEach(() => {
         eventStore = new MemoryEventStore();
-        app = createApp(eventStore, new MockProductIntegration(products));
+        app = createApp(eventStore, new MockProductIntegration(products), { logHttpRequests: false });
     });
 
     it('should return 404 for order that does not exist', async () => {

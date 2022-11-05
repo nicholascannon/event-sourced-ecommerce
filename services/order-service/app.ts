@@ -8,14 +8,16 @@ import { errorHandler } from '../pkg/http/middleware/error-handler';
 import { ProductIntegration } from '../pkg/integrations/product/product-integration';
 import { requestLogger } from '../pkg/shared/logger';
 
-export function createApp(eventStore: DomainEventStore, productIntegration: ProductIntegration) {
+export function createApp(eventStore: DomainEventStore, productIntegration: ProductIntegration, options?: AppOptions) {
     const orderService = new OrderService(eventStore, productIntegration);
     const orderController = new OrderController(orderService);
 
     const app = express();
     app.use(helmet());
     app.use(express.json());
-    app.use(requestLogger);
+    if (options?.logHttpRequests) {
+        app.use(requestLogger);
+    }
 
     app.get('/healthcheck', (_req, res) => res.json({ status: 'healthy' }));
 
@@ -35,4 +37,8 @@ export function createApp(eventStore: DomainEventStore, productIntegration: Prod
     app.use(errorHandler);
 
     return app;
+}
+
+interface AppOptions {
+    logHttpRequests: boolean;
 }

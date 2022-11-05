@@ -11,7 +11,7 @@ describe('/v1/orders/:orderId/add/:itemId', () => {
 
     beforeEach(() => {
         eventStore = new MemoryEventStore();
-        app = createApp(eventStore, new MockProductIntegration(products));
+        app = createApp(eventStore, new MockProductIntegration(products), { logHttpRequests: false });
     });
 
     it('should return 400 for non UUID order id', async () => {
