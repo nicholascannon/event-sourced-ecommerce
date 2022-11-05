@@ -72,6 +72,7 @@ services:
       WRITER_DB_PASSWORD: password1
       WRITER_DB_PORT: 5432
       WRITER_DB_DATABASE: ecom
+      BATCH_SIZE: 10
     depends_on:
       flyway:
         condition: service_completed_successfully

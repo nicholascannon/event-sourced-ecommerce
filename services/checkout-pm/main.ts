@@ -10,7 +10,6 @@ import { CONFIG } from './config';
 import { CheckoutEventConsumer } from './consumer';
 
 const PM_NAME = 'checkout-pm';
-const BATCH_SIZE = 10;
 
 process
     .on('uncaughtException', (error) => {
@@ -28,7 +27,7 @@ process
 
 logger.info('Config', {
     pmName: PM_NAME,
-    batchSize: BATCH_SIZE,
+    batchSize: CONFIG.batchSize,
     reader: {
         host: CONFIG.reader.host,
         user: CONFIG.reader.user,
@@ -61,4 +60,4 @@ const emailService = new MemoryEmailServiceIntegration(logger);
 const reader = new BookmarkedEventReader(startingBookmark, eventStoreReader);
 const consumer = new CheckoutEventConsumer(bookmarkRepo, eventStoreReader, eventStoreWriter, emailService);
 
-startProcessManager(reader, consumer, { batchSize: BATCH_SIZE, delay: 1_000 });
+startProcessManager(reader, consumer, { batchSize: CONFIG.batchSize, delay: 1_000 });

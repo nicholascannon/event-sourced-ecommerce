@@ -29,8 +29,9 @@ export const CONFIG = (() => {
                 required: ['host', 'user', 'password', 'port', 'database'],
                 additionalProperties: false,
             },
+            batchSize: { type: 'integer', exclusiveMinimum: 0 },
         },
-        required: ['reader', 'writer'],
+        required: ['reader', 'writer', 'batchSize'],
         additionalProperties: false,
     });
 
@@ -50,6 +51,7 @@ export const CONFIG = (() => {
                 port: Number(process.env.WRITER_DB_PORT),
                 database: process.env.WRITER_DB_DATABASE,
             },
+            batchSize: Number(process.env.BATCH_SIZE),
         });
     } catch (error) {
         logger.error('Configuration error', error);
@@ -60,6 +62,7 @@ export const CONFIG = (() => {
 export interface Config {
     reader: DatabaseConfig;
     writer: DatabaseConfig;
+    batchSize: number;
 }
 
 interface DatabaseConfig {
