@@ -1,19 +1,8 @@
 import pg from 'pg';
-import { Bookmark } from '../../event-store/bookmark';
+import { Bookmark, bookmarkValidator } from '../../event-store/bookmark';
 import { BookmarkRepo } from '../../process-manager/bookmark';
-import { AjvValidator } from '../../shared/validation';
 
 export class PgBookmarkRepo implements BookmarkRepo<Bookmark> {
-    private static validator = new AjvValidator<Bookmark>({
-        type: 'object',
-        properties: {
-            id: { type: 'string' },
-            insertingTxid: { type: 'string' },
-        },
-        required: ['id', 'insertingTxid'],
-        additionalProperties: false,
-    });
-
     constructor(private readonly name: string, private readonly pool: pg.Pool) {}
 
     async get(): Promise<Bookmark> {
@@ -34,7 +23,7 @@ export class PgBookmarkRepo implements BookmarkRepo<Bookmark> {
     }
 
     async set(bookmark: Bookmark) {
-        PgBookmarkRepo.validator.validate(bookmark);
+        bookmarkValidator.validate(bookmark);
         await this.pool.query(
             `
                 INSERT INTO order_context.bookmarks(name, value)
