@@ -35,7 +35,7 @@ const pool = createPool(CONFIG.database);
 const eventStore = new PgEventStore(pool);
 const productIntegration = new HttpProductIntegration(CONFIG.productServiceHost);
 
-const app = createApp(eventStore, productIntegration);
+const app = createApp(eventStore, productIntegration, { logHttpRequests: true });
 
 const server = app.listen(CONFIG.port, () => {
     logger.info('Service started', { port: CONFIG.port });
