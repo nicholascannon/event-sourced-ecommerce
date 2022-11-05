@@ -7,6 +7,8 @@ export const logger = winston.createLogger({
     format: winston.format.json(),
 });
 
+export const silentLogger = winston.createLogger({ silent: true });
+
 export const requestLogger = expressWinston.logger({
     winstonInstance: logger,
     headerBlacklist: ['cookie', 'authorization'],

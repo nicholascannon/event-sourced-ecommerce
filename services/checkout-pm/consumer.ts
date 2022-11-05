@@ -1,14 +1,15 @@
-import { PgBookmarkRepo } from '../pkg/data/postgres/pg-bookmark-repo';
 import { DomainEvent, DomainEventStoreReader, DomainEventStoreWriter } from '../pkg/domain/domain-event-store';
 import { Order } from '../pkg/domain/order/order';
+import { Bookmark } from '../pkg/event-store/bookmark';
 import { PersistedEvent } from '../pkg/event-store/events';
 import { EmailServiceIntegration } from '../pkg/integrations/email/email-integration';
+import { BookmarkRepo } from '../pkg/process-manager/bookmark';
 import { Consumer } from '../pkg/process-manager/consumer';
 import { logger } from '../pkg/shared/logger';
 
 export class CheckoutEventConsumer implements Consumer<DomainEvent> {
     constructor(
-        private readonly bookmarkRepo: PgBookmarkRepo,
+        private readonly bookmarkRepo: BookmarkRepo<Bookmark>,
         private readonly eventStoreReader: DomainEventStoreReader,
         private readonly eventStoreWriter: DomainEventStoreWriter,
         private readonly emailService: EmailServiceIntegration
