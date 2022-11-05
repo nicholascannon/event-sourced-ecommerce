@@ -34,13 +34,13 @@ I have made the following out of scope for this project to keep things simple:
 Run everything in Docker:
 
 ```sh
-docker-compose --profile with-services up --build
+./scripts/run.sh
 ```
 
 Or run locally with hot reload:
 
 ```sh
-docker-compose up --build --detach
+./scripts/develop.sh
 cd services
 npm run watch:<SERIVCE_NAME>
 ```
