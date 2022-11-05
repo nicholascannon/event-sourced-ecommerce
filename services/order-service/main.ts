@@ -1,7 +1,7 @@
+import { lifecycle } from '../pkg/shared/lifecycle';
 import { createPool } from '../pkg/data/postgres/db';
 import { PgEventStore } from '../pkg/data/postgres/pg-event-store';
 import { HttpProductIntegration } from '../pkg/integrations/product/product-integration';
-import { lifecycle } from '../pkg/shared/lifecycle';
 import { logger } from '../pkg/shared/logger';
 import { createApp } from './app';
 import { CONFIG } from './config';

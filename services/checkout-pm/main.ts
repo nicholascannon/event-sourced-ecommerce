@@ -1,10 +1,10 @@
+import { lifecycle } from '../pkg/shared/lifecycle';
 import { createPool } from '../pkg/data/postgres/db';
 import { PgBookmarkRepo } from '../pkg/data/postgres/pg-bookmark-repo';
 import { PgEventStore } from '../pkg/data/postgres/pg-event-store';
 import { MemoryEmailServiceIntegration } from '../pkg/integrations/email/memory-email-integration';
 import { startProcessManager } from '../pkg/process-manager/pm-coordinator';
 import { BookmarkedEventReader } from '../pkg/process-manager/reader';
-import { lifecycle } from '../pkg/shared/lifecycle';
 import { logger } from '../pkg/shared/logger';
 import { CONFIG } from './config';
 import { CheckoutEventConsumer } from './consumer';
