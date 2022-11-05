@@ -1,0 +1,98 @@
+{
+	"info": {
+		"_postman_id": "a22b1c26-394b-496e-87ed-0429b5dd1104",
+		"name": "Event Sourced Ecommerce",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add Product 1",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/v1/orders/84c934a6-9c52-448e-b021-4927a0908c24/add/8151c2fc-6e3c-4285-a1b0-a00c194cd5ac",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"orders",
+						"84c934a6-9c52-448e-b021-4927a0908c24",
+						"add",
+						"8151c2fc-6e3c-4285-a1b0-a00c194cd5ac"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Product 2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/v1/orders/84c934a6-9c52-448e-b021-4927a0908c24/add/64b8240a-1737-4714-9c78-03ab9f7f0507",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"orders",
+						"84c934a6-9c52-448e-b021-4927a0908c24",
+						"add",
+						"64b8240a-1737-4714-9c78-03ab9f7f0507"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Order",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/v1/orders/84c934a6-9c52-448e-b021-4927a0908c24",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"orders",
+						"84c934a6-9c52-448e-b021-4927a0908c24"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Checkout Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/v1/orders/84c934a6-9c52-448e-b021-4927a0908c24/checkout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"orders",
+						"84c934a6-9c52-448e-b021-4927a0908c24",
+						"checkout"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
