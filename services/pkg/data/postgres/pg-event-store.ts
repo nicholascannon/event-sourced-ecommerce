@@ -1,6 +1,5 @@
 import pg from 'pg';
 import { DomainEvent, DomainEventStore } from '../../domain/domain-event-store';
-import { OrderEvent } from '../../domain/order/order-events';
 import { Bookmark } from '../../event-store/bookmark';
 import { PersistedEvent } from '../../event-store/events';
 
@@ -32,7 +31,7 @@ export class PgEventStore implements DomainEventStore {
         return events as PersistedEvent<E>[];
     }
 
-    async loadEvents(from: Bookmark, batchSize: number): Promise<PersistedEvent<OrderEvent>[]> {
+    async loadEvents(from: Bookmark, batchSize: number): Promise<PersistedEvent<DomainEvent>[]> {
         const { id, insertingTxid } = from;
 
         const { rows: events } = await this.pool.query<PersistedEvent<DomainEvent>>(
