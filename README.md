@@ -2,7 +2,7 @@
 
 An event sourced ecommerce system for learning and development.
 
-Project status: **still in progress**.
+Project status: **backend working! frontend still in progress**.
 
 **STACK: TypeScript, Node.js, React, Postgres, Docker, ESBuild, Flyway.**
 
