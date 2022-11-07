@@ -28,6 +28,7 @@ I have made the following out of scope for this project to keep things simple:
 -   API authentication & authorization
 -   User specific stuff e.g. orders won't have a customer id attached
 -   Handling product price changes (e.g. concurrently setting the price while a customer checks out)
+-   An Order read model process (I've just used the aggregate instead)
 
 ## How to run locally
 

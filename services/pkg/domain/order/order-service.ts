@@ -44,6 +44,7 @@ export class OrderService {
     }
 
     async getOrder(orderId: string): Promise<Order | undefined> {
+        // NOTE: this should use an order read model but out of scope
         const events = await this.eventStore.loadStream<OrderEvent>(orderId, 'ORDER_FLOW');
         const order = new Order(orderId).buildFrom(events);
 

@@ -21,6 +21,7 @@ export class CheckoutEventConsumer implements Consumer<DomainEvent> {
                 continue;
             }
 
+            // NOTE: this should use an order read model but out of scope
             const events = await this.eventStoreReader.loadStream(event.streamId, 'ORDER_FLOW');
             const order = new Order(event.streamId).buildFrom(events);
 
