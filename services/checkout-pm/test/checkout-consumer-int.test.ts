@@ -18,21 +18,21 @@ describe('CheckoutEventConsumer', () => {
         es = new MemoryEventStore([
             {
                 streamId: ORDER_ID,
-                streamType: 'ORDER_FLOW',
+                streamType: 'CUSTOMER_ORDER',
                 eventType: 'ORDER_ITEM_ADDED',
                 version: 1,
                 payload: { itemId: products[0].id, name: products[0].name },
             },
             {
                 streamId: ORDER_ID,
-                streamType: 'ORDER_FLOW',
+                streamType: 'CUSTOMER_ORDER',
                 eventType: 'ORDER_ITEM_ADDED',
                 version: 2,
                 payload: { itemId: products[1].id, name: products[1].name },
             },
             {
                 streamId: ORDER_ID,
-                streamType: 'ORDER_FLOW',
+                streamType: 'CUSTOMER_ORDER',
                 eventType: 'ORDER_CHECKED_OUT',
                 version: 3,
                 payload: {
@@ -48,10 +48,10 @@ describe('CheckoutEventConsumer', () => {
         const events = await es.loadEvents(await bookmarkRepo.get(), 10);
         await consumer.consumeEvents(events);
 
-        const orderStream = removePersistedProps(await es.loadStream(ORDER_ID, 'ORDER_FLOW'));
+        const orderStream = removePersistedProps(await es.loadStream(ORDER_ID, 'CUSTOMER_ORDER'));
         expect(orderStream[orderStream.length - 1]).toEqual({
             streamId: ORDER_ID,
-            streamType: 'ORDER_FLOW',
+            streamType: 'CUSTOMER_ORDER',
             eventType: 'ORDER_CONFIRMED',
             version: 4,
             payload: {},

@@ -13,7 +13,7 @@ export class OrderService {
     async addItem(orderId: string, itemId: string): Promise<AddItemResponse> {
         // NOTE: I would add a check in here to ensure a user doesn't have another in-progress
         // order with a different id (creating 2 orders) but that is skipped for this demo.
-        const events = await this.eventStore.loadStream<OrderEvent>(orderId, 'ORDER_FLOW');
+        const events = await this.eventStore.loadStream<OrderEvent>(orderId, 'CUSTOMER_ORDER');
         const order = new Order(orderId).buildFrom(events);
 
         if (order.status !== 'IN_PROGRESS') {
@@ -30,7 +30,7 @@ export class OrderService {
 
         await this.eventStore.save({
             streamId: orderId,
-            streamType: 'ORDER_FLOW',
+            streamType: 'CUSTOMER_ORDER',
             eventType: 'ORDER_ITEM_ADDED',
             version: order.version + 1,
             payload: { itemId: item.id, name: item.name },
@@ -45,7 +45,7 @@ export class OrderService {
 
     async getOrder(orderId: string): Promise<Order | undefined> {
         // NOTE: this should use an order read model but out of scope
-        const events = await this.eventStore.loadStream<OrderEvent>(orderId, 'ORDER_FLOW');
+        const events = await this.eventStore.loadStream<OrderEvent>(orderId, 'CUSTOMER_ORDER');
         const order = new Order(orderId).buildFrom(events);
 
         if (order.version === 0) {
@@ -55,7 +55,7 @@ export class OrderService {
     }
 
     async checkout(orderId: string): Promise<void> {
-        const events = await this.eventStore.loadStream<OrderEvent>(orderId, 'ORDER_FLOW');
+        const events = await this.eventStore.loadStream<OrderEvent>(orderId, 'CUSTOMER_ORDER');
         const order = new Order(orderId).buildFrom(events);
 
         if (order.version === 0) {
@@ -89,7 +89,7 @@ export class OrderService {
 
         await this.eventStore.save({
             streamId: orderId,
-            streamType: 'ORDER_FLOW',
+            streamType: 'CUSTOMER_ORDER',
             eventType: 'ORDER_CHECKED_OUT',
             version: order.version + 1,
             payload: { totalPrice },

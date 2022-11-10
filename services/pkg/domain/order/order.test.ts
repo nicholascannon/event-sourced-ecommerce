@@ -15,7 +15,7 @@ describe('Order', () => {
                 eventType: 'ORDER_ITEM_ADDED',
                 version: 1,
                 streamId: 'order-id',
-                streamType: 'ORDER_FLOW',
+                streamType: 'CUSTOMER_ORDER',
                 payload: {
                     itemId: 'item-id',
                     name: 'item1',
@@ -25,7 +25,7 @@ describe('Order', () => {
                 eventType: 'ORDER_ITEM_ADDED',
                 version: 2,
                 streamId: 'order-id',
-                streamType: 'ORDER_FLOW',
+                streamType: 'CUSTOMER_ORDER',
                 payload: {
                     itemId: 'item-id-2',
                     name: 'item2',
@@ -50,7 +50,7 @@ describe('Order', () => {
                 eventType: 'ORDER_CHECKED_OUT',
                 version: 1,
                 streamId: 'order-id',
-                streamType: 'ORDER_FLOW',
+                streamType: 'CUSTOMER_ORDER',
                 payload: {
                     totalPrice: 5.0,
                 },
@@ -70,7 +70,7 @@ describe('Order', () => {
                 eventType: 'ORDER_CONFIRMED',
                 version: 1,
                 streamId: 'order-id',
-                streamType: 'ORDER_FLOW',
+                streamType: 'CUSTOMER_ORDER',
                 payload: {},
             },
         ]);

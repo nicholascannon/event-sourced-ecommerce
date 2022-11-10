@@ -28,7 +28,7 @@ describe('/v1/orders/:orderId', () => {
         // Add item
         await eventStore.save({
             streamId: ORDER_ID,
-            streamType: 'ORDER_FLOW',
+            streamType: 'CUSTOMER_ORDER',
             eventType: 'ORDER_ITEM_ADDED',
             version: 1,
             payload: { itemId: products[0].id, name: products[0].name },
@@ -37,7 +37,7 @@ describe('/v1/orders/:orderId', () => {
         // Checkout order
         await eventStore.save({
             streamId: ORDER_ID,
-            streamType: 'ORDER_FLOW',
+            streamType: 'CUSTOMER_ORDER',
             eventType: 'ORDER_CHECKED_OUT',
             version: 2,
             payload: {

@@ -1,7 +1,7 @@
 import { BaseEvent } from '../../event-store/events';
 
 export interface AddItemEvent extends BaseEvent {
-    streamType: 'ORDER_FLOW';
+    streamType: 'CUSTOMER_ORDER';
     eventType: 'ORDER_ITEM_ADDED';
     payload: {
         itemId: string;
@@ -10,7 +10,7 @@ export interface AddItemEvent extends BaseEvent {
 }
 
 export interface CheckedOutEvent extends BaseEvent {
-    streamType: 'ORDER_FLOW';
+    streamType: 'CUSTOMER_ORDER';
     eventType: 'ORDER_CHECKED_OUT';
     payload: {
         totalPrice: number;
@@ -18,7 +18,7 @@ export interface CheckedOutEvent extends BaseEvent {
 }
 
 export interface OrderConfirmedEvent extends BaseEvent {
-    streamType: 'ORDER_FLOW';
+    streamType: 'CUSTOMER_ORDER';
     eventType: 'ORDER_CONFIRMED';
     payload: Record<string, never>; // forces empty object
 }

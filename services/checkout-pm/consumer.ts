@@ -22,7 +22,7 @@ export class CheckoutEventConsumer implements Consumer<DomainEvent> {
             }
 
             // NOTE: this should use an order read model but out of scope
-            const events = await this.eventStoreReader.loadStream(event.streamId, 'ORDER_FLOW');
+            const events = await this.eventStoreReader.loadStream(event.streamId, 'CUSTOMER_ORDER');
             const order = new Order(event.streamId).buildFrom(events);
 
             await this.emailService.sendEmail({
@@ -36,7 +36,7 @@ export class CheckoutEventConsumer implements Consumer<DomainEvent> {
 
             await this.eventStoreWriter.save({
                 streamId: order.id,
-                streamType: 'ORDER_FLOW',
+                streamType: 'CUSTOMER_ORDER',
                 eventType: 'ORDER_CONFIRMED',
                 version: order.version + 1,
                 payload: {},

@@ -24,26 +24,26 @@ describe('/v1/orders/:orderId/checkout', () => {
         // Create an order and some items
         await eventStore.save({
             streamId: ORDER_ID,
-            streamType: 'ORDER_FLOW',
+            streamType: 'CUSTOMER_ORDER',
             eventType: 'ORDER_ITEM_ADDED',
             version: 1,
             payload: { itemId: products[0].id, name: products[0].name },
         });
         await eventStore.save({
             streamId: ORDER_ID,
-            streamType: 'ORDER_FLOW',
+            streamType: 'CUSTOMER_ORDER',
             eventType: 'ORDER_ITEM_ADDED',
             version: 2,
             payload: { itemId: products[1].id, name: products[1].name },
         });
 
         const { status } = await request(app).post(`/v1/orders/${ORDER_ID}/checkout`);
-        const stream = removePersistedProps(await eventStore.loadStream(ORDER_ID, 'ORDER_FLOW'));
+        const stream = removePersistedProps(await eventStore.loadStream(ORDER_ID, 'CUSTOMER_ORDER'));
 
         expect(status).toBe(200);
         expect(stream[2]).toEqual({
             streamId: ORDER_ID,
-            streamType: 'ORDER_FLOW',
+            streamType: 'CUSTOMER_ORDER',
             eventType: 'ORDER_CHECKED_OUT',
             version: 3,
             payload: {
@@ -62,7 +62,7 @@ describe('/v1/orders/:orderId/checkout', () => {
         // Checkout an order
         await eventStore.save({
             streamId: ORDER_ID,
-            streamType: 'ORDER_FLOW',
+            streamType: 'CUSTOMER_ORDER',
             eventType: 'ORDER_CHECKED_OUT',
             version: 2,
             payload: {
@@ -71,7 +71,7 @@ describe('/v1/orders/:orderId/checkout', () => {
         });
 
         const { status, body } = await request(app).post(`/v1/orders/${ORDER_ID}/checkout`);
-        const stream = removePersistedProps(await eventStore.loadStream(ORDER_ID, 'ORDER_FLOW'));
+        const stream = removePersistedProps(await eventStore.loadStream(ORDER_ID, 'CUSTOMER_ORDER'));
 
         expect(status).toBe(403);
         expect(body).toEqual({ message: 'Cannot complete action on checked out order', orderId: ORDER_ID });
@@ -84,7 +84,7 @@ describe('/v1/orders/:orderId/checkout', () => {
         // Add some valid items
         await eventStore.save({
             streamId: ORDER_ID,
-            streamType: 'ORDER_FLOW',
+            streamType: 'CUSTOMER_ORDER',
             eventType: 'ORDER_ITEM_ADDED',
             version: 1,
             payload: { itemId: products[0].id, name: products[0].name },
@@ -93,7 +93,7 @@ describe('/v1/orders/:orderId/checkout', () => {
         // Item saved here was valid but at time of checkout it's invalid
         await eventStore.save({
             streamId: ORDER_ID,
-            streamType: 'ORDER_FLOW',
+            streamType: 'CUSTOMER_ORDER',
             eventType: 'ORDER_ITEM_ADDED',
             version: 3,
             payload: {
@@ -103,7 +103,7 @@ describe('/v1/orders/:orderId/checkout', () => {
         });
 
         const { status, body } = await request(app).post(`/v1/orders/${ORDER_ID}/checkout`);
-        const stream = removePersistedProps(await eventStore.loadStream(ORDER_ID, 'ORDER_FLOW'));
+        const stream = removePersistedProps(await eventStore.loadStream(ORDER_ID, 'CUSTOMER_ORDER'));
 
         expect(status).toBe(400);
         expect(body).toEqual({ message: 'Invalid order item', itemIds: [invalidItemId] });
