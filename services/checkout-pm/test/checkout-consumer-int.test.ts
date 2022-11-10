@@ -56,5 +56,6 @@ describe('CheckoutEventConsumer', () => {
             version: 4,
             payload: {},
         });
+        expect(await bookmarkRepo.get()).toEqual({ id: '3', insertingTxid: '3' }); // just processed 3rd event
     });
 });

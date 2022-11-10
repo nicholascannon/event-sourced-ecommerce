@@ -9,8 +9,8 @@ export class MemoryEventStore implements DomainEventStore {
     constructor(seedData?: DomainEvent[]) {
         if (seedData) {
             const persistedSeedData = seedData.map<PersistedEvent<DomainEvent>>((e, idx) => ({
-                id: String(idx),
-                insertingTXID: String(idx),
+                id: String(idx + 1),
+                insertingTXID: String(idx + 1),
                 ...e,
                 timestamp: new Date(),
             }));
