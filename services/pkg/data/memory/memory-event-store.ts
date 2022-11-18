@@ -1,5 +1,4 @@
 import { DomainEvent, DomainEventStore } from '../../domain/domain-event-store';
-import { OrderEvent } from '../../domain/order/order-events';
 import { Bookmark } from '../../event-store/bookmark';
 import { PersistedEvent } from '../../event-store/events';
 
@@ -18,15 +17,15 @@ export class MemoryEventStore implements DomainEventStore {
         }
     }
 
-    async loadStream<E extends OrderEvent>(id: string, streamType: E['streamType']): Promise<PersistedEvent<E>[]> {
+    async loadStream<E extends DomainEvent>(id: string, streamType: E['streamType']): Promise<PersistedEvent<E>[]> {
         return this.events.filter((e) => e.streamId === id && e.streamType === streamType) as PersistedEvent<E>[];
     }
 
-    async loadEvents(from: Bookmark, batchSize: number): Promise<PersistedEvent<OrderEvent>[]> {
+    async loadEvents(from: Bookmark, batchSize: number): Promise<PersistedEvent<DomainEvent>[]> {
         return this.events.filter((e) => e.id > from.id).slice(0, batchSize);
     }
 
-    async save(event: OrderEvent) {
+    async save(event: DomainEvent) {
         const stream = await this.loadStream(event.streamId, event.streamType);
         const conflict = stream.find((e) => e.version === event.version);
 
