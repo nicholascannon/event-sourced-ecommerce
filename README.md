@@ -75,10 +75,12 @@ services/           # Backend services code
     order-service/  # Entrypoint for the order service
         main.ts
         config.ts
+        Dockerfile
         ...
     checkout-pm/    # Entrypoint for the checkout process manager
         main.ts
         config.ts
+        Dockerfile
         ...
     ...
 README.md           # File you're reading now

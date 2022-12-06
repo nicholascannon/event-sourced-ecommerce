@@ -39,7 +39,7 @@ services:
 
   order-service:
     build:
-      dockerfile: order-service.dockerfile
+      dockerfile: ./order-service/Dockerfile
       context: ./services
     environment:
       PORT: 8000
@@ -59,7 +59,7 @@ services:
 
   checkout-pm:
     build:
-      dockerfile: checkout-pm.dockerfile
+      dockerfile: ./checkout-pm/Dockerfile
       context: ./services
     environment:
       READER_DB_HOST: event-store
