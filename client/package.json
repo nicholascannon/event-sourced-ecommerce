@@ -2,6 +2,7 @@
     "name": "event-source-ecommerce-client",
     "version": "0.0.1",
     "author": "Nicholas Cannon",
+    "type": "module",
     "scripts": {
         "start": "node ./scripts/serve.mjs",
         "build": "node ./scripts/build.mjs",
@@ -17,6 +18,10 @@
         "typescript": "4.8.4"
     },
     "dependencies": {
+        "@emotion/react": "^11.10.5",
+        "@emotion/styled": "^11.10.5",
+        "@fontsource/roboto": "^4.5.8",
+        "@mui/material": "^5.10.17",
         "react": "18.2.0",
         "react-dom": "18.2.0"
     },

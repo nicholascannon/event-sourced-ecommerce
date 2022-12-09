@@ -13,10 +13,12 @@ esbuild
         {
             entryPoints: [APP_ENTRYPOINT],
             entryNames: '[ext]/[name]',
-            outdir: SERVE_DIR,
             bundle: true,
-            sourcemap: true,
+            minify: true,
+            treeShaking: true,
             format: 'esm',
+            outdir: SERVE_DIR,
+            sourcemap: true,
         }
     )
     .then(() => console.log(`Serving at http://localhost:${SERVE_PORT}`));
