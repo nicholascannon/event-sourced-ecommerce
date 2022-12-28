@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@mui/material';
-import { Page } from './components/Page';
+import { Page } from './components/layout/page';
 
 export function App() {
     return (
