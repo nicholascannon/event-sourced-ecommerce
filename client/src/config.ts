@@ -6,7 +6,7 @@ export const CONFIG: Config = (() => {
                 orderServiceURL: 'http://localhost:8000',
             };
         default:
-            throw new Error(`No config for host ${origin}`);
+            throw new Error(`No config for origin ${origin}`);
     }
 })();
 
