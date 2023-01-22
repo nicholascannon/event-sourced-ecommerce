@@ -4,7 +4,7 @@ An event sourced ecommerce system for learning and development.
 
 Project status: **backend working! frontend still in progress**.
 
-**STACK: TypeScript, Node.js, React, Postgres, Docker, Vite, Flyway.**
+**STACK: TypeScript, Node.js, React, Postgres, Docker, Vite, ESBuild Flyway.**
 
 **IMPORTANT:** The way I've written this system is not necessarily indicative of what I think is the _best way_ to solve this problem.
 I've tried a few paradigms, techniques and tools (e.g. a bit more Object Orientated instead of Functional) for the sake of learning and example.
