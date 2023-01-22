@@ -49,6 +49,7 @@ services:
       DB_PORT: 5432
       DB_DATABASE: ecom
       PRODUCT_SERVICE_HOST: http://product-service:8001/v1
+      CORS_ORIGINS: http://localhost:3000
     ports:
       - 8000:8000
     depends_on:
@@ -78,13 +79,12 @@ services:
         condition: service_completed_successfully
     profiles:
       - with-services
-
-  client:
-    build: ./client
-    ports:
-      - 8002:80
-    depends_on:
-      order-service:
-        condition: service_started
-    profiles:
-      - with-services
+  # client:
+  #   build: ./client
+  #   ports:
+  #     - 8002:80
+  #   depends_on:
+  #     order-service:
+  #       condition: service_started
+  #   profiles:
+  #     - with-services

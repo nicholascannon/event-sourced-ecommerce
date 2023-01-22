@@ -1,10 +1,10 @@
 import React from 'react';
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 import { RootLayout } from './layouts/root-layout';
-import { CreateOrderPage } from './pages/create-order';
-import { ErrorPage } from './pages/error';
-import { MyOrdersPage } from './pages/my-orders';
-import { OrderDetailsPage } from './pages/order-details';
+import { CreateOrderPage } from './pages/create-order-page';
+import { ErrorPage } from './pages/error-page';
+import { MyOrdersPage } from './pages/my-orders-page';
+import { OrderDetailsPage } from './pages/order-details-page';
 
 export const router = createBrowserRouter([
     {
@@ -25,7 +25,7 @@ export const router = createBrowserRouter([
                 element: <CreateOrderPage />,
             },
             {
-                path: '/orders/:id',
+                path: '/order/:id',
                 element: <OrderDetailsPage />,
             },
         ],

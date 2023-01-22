@@ -19,6 +19,7 @@ export const CONFIG = (() => {
                 additionalProperties: false,
             },
             productServiceHost: { type: 'string' },
+            corsOrigins: { type: 'array', items: { type: 'string' }, nullable: true },
         },
         required: ['port', 'database', 'productServiceHost'],
         additionalProperties: false,
@@ -35,6 +36,7 @@ export const CONFIG = (() => {
                 database: process.env.DB_DATABASE,
             },
             productServiceHost: process.env.PRODUCT_SERVICE_HOST,
+            corsOrigins: process.env.CORS_ORIGINS?.split(','),
         });
     } catch (error) {
         logger.error('Configuration error', error);
@@ -52,4 +54,5 @@ export interface Config {
         database: string;
     };
     productServiceHost: string;
+    corsOrigins?: string[];
 }

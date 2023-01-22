@@ -21,7 +21,7 @@ export const errorHandler: ErrorRequestHandler = (error, _req, res, next) => {
         return res.status(400).json({ message: error.message, itemIds: error.itemIds });
     }
     if (error instanceof OrderDoesNotExist) {
-        return res.status(400).json({ message: error.message, orderId: error.orderId });
+        return res.status(404).json({ message: error.message, orderId: error.orderId });
     }
 
     logger.error('Internal server error', error);

@@ -29,13 +29,14 @@ logger.info('Config', {
         database: CONFIG.database.database,
     },
     productServiceHost: CONFIG.productServiceHost,
+    corsOrigins: CONFIG.corsOrigins,
 });
 
 const pool = createPool(CONFIG.database);
 const eventStore = new PgEventStore(pool);
 const productIntegration = new HttpProductIntegration(CONFIG.productServiceHost);
 
-const app = createApp(eventStore, productIntegration, { logHttpRequests: true });
+const app = createApp(eventStore, productIntegration, { logHttpRequests: true, corsOrigins: CONFIG.corsOrigins });
 
 const server = app.listen(CONFIG.port, () => {
     logger.info('Service started', { port: CONFIG.port });

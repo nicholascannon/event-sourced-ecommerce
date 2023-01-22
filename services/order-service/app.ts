@@ -1,5 +1,6 @@
 import express from 'express';
 import helmet from 'helmet';
+import cors from 'cors';
 import { DomainEventStore } from '../pkg/domain/domain-event-store';
 import { OrderService } from '../pkg/domain/order/order-service';
 import { OrderController } from '../pkg/http/controllers/order-controller';
@@ -14,6 +15,9 @@ export function createApp(eventStore: DomainEventStore, productIntegration: Prod
 
     const app = express();
     app.use(helmet());
+    if (options?.corsOrigins) {
+        app.use(cors({ origin: options.corsOrigins }));
+    }
     app.use(express.json());
     if (options?.logHttpRequests) {
         app.use(requestLogger);
@@ -40,5 +44,6 @@ export function createApp(eventStore: DomainEventStore, productIntegration: Prod
 }
 
 interface AppOptions {
-    logHttpRequests: boolean;
+    logHttpRequests?: boolean;
+    corsOrigins?: string[];
 }

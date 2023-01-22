@@ -54,7 +54,7 @@ describe('/v1/orders/:orderId/checkout', () => {
 
     it('should fail to checkout an order that does not exist', async () => {
         const { status, body } = await request(app).post(`/v1/orders/${ORDER_ID}/checkout`);
-        expect(status).toBe(400);
+        expect(status).toBe(404);
         expect(body).toEqual({ message: 'Cannot complete action on unknown order', orderId: ORDER_ID });
     });
 

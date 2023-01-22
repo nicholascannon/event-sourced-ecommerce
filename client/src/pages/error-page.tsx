@@ -4,7 +4,6 @@ import { isRouteErrorResponse, useRouteError } from 'react-router-dom';
 
 export const ErrorPage = () => {
     const error = useRouteError();
-    console.error(error);
 
     let errorMessage = 'Unknown error';
     if (isRouteErrorResponse(error)) {
@@ -22,7 +21,7 @@ export const ErrorPage = () => {
                 justifyContent: 'center',
                 textAlign: 'center',
                 height: '100vh',
-                gap: '20px',
+                gap: '10px',
             }}
         >
             <Typography variant="h3">Oops!</Typography>
