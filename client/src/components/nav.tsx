@@ -1,7 +1,8 @@
 import React from 'react';
-import { Divider, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Toolbar } from '@mui/material';
+import { Divider, IconButton, List, Toolbar } from '@mui/material';
 import { ChevronLeft as ChevronLeftIcon, Home as HomeIcon, Add as AddIcon } from '@mui/icons-material';
-import { Drawer } from './generic/drawer';
+import { Drawer } from './drawer';
+import { NavLink } from './nav-link';
 
 export function Nav({ open, toggle }: Props) {
     return (
@@ -22,19 +23,8 @@ export function Nav({ open, toggle }: Props) {
             <Divider />
 
             <List component="nav">
-                <ListItemButton>
-                    <ListItemIcon>
-                        <HomeIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="My Orders" />
-                </ListItemButton>
-
-                <ListItemButton>
-                    <ListItemIcon>
-                        <AddIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Create Order" />
-                </ListItemButton>
+                <NavLink to="/" icon={<HomeIcon />} text="My Orders" />
+                <NavLink to="/create-order" icon={<AddIcon />} text="Create Order" />
             </List>
         </Drawer>
     );
