@@ -1,10 +1,10 @@
 import React from 'react';
-import { Page } from '../components/page';
+import { Typography } from '@mui/material';
 
-export function MyOrders() {
+export const MyOrdersPage = () => {
     return (
-        <Page title="My Orders">
-            <h1>Your Orders</h1>
-        </Page>
+        <>
+            <Typography variant="h4">My Orders</Typography>
+        </>
     );
-}
+};

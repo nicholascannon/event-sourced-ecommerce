@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { Box, IconButton, Toolbar, Typography } from '@mui/material';
 import { Menu as MenuIcon } from '@mui/icons-material';
-import { AppBar } from './generic/app-bar';
+import { AppBar } from '../components/generic/app-bar';
 import { Container } from '@mui/system';
-import { Nav } from './nav';
+import { Nav } from '../components/nav';
 
-export function Page(props: Props) {
-    const { title, children } = props;
-
+export function RootLayout({ children }: Props) {
     const [open, setOpen] = useState(true);
     const toggleDrawer = () => setOpen(!open);
 
@@ -29,7 +27,7 @@ export function Page(props: Props) {
                     </IconButton>
 
                     <Typography variant="h6" component="div">
-                        {title}
+                        Event Sourced Ecommerce
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -41,17 +39,19 @@ export function Page(props: Props) {
                     flexGrow: 1,
                     height: '100vh',
                     overflow: 'auto',
+
+                    display: 'flex',
+                    flexDirection: 'column',
                 }}
                 component="main"
             >
                 <Toolbar />
-                <Container sx={{ mt: 4, mb: 4 }}>{children}</Container>
+                <Container sx={{ mt: 4, mb: 4, flex: 1 }}>{children}</Container>
             </Box>
         </Box>
     );
 }
 
 type Props = {
-    title: string;
     children: React.ReactNode;
 };
