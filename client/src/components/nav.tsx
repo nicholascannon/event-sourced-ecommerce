@@ -1,7 +1,7 @@
 import React from 'react';
 import { Divider, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Toolbar } from '@mui/material';
 import { ChevronLeft as ChevronLeftIcon, Home as HomeIcon, Add as AddIcon } from '@mui/icons-material';
-import { Drawer } from './generic/drawer';
+import { Drawer } from './drawer';
 
 export function Nav({ open, toggle }: Props) {
     return (

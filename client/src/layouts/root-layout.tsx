@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, IconButton, Toolbar, Typography } from '@mui/material';
 import { Menu as MenuIcon } from '@mui/icons-material';
-import { AppBar } from '../components/generic/app-bar';
+import { AppBar } from '../components/app-bar';
 import { Container } from '@mui/system';
 import { Nav } from '../components/nav';
 
