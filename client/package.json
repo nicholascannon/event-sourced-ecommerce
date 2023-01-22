@@ -24,7 +24,8 @@
         "@mui/icons-material": "^5.10.16",
         "@mui/material": "^5.10.17",
         "react": "18.2.0",
-        "react-dom": "18.2.0"
+        "react-dom": "18.2.0",
+        "react-router-dom": "^6.7.0"
     },
     "prettier": {
         "printWidth": 120,
