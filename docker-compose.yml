@@ -79,6 +79,29 @@ services:
         condition: service_completed_successfully
     profiles:
       - with-services
+
+  order-rmp:
+    build:
+      dockerfile: ./order-rmp/Dockerfile
+      context: ./services
+    environment:
+      READER_DB_HOST: event-store
+      READER_DB_USER: order_reader
+      READER_DB_PASSWORD: password2
+      READER_DB_PORT: 5432
+      READER_DB_DATABASE: ecom
+      WRITER_DB_HOST: event-store
+      WRITER_DB_USER: order_writer
+      WRITER_DB_PASSWORD: password1
+      WRITER_DB_PORT: 5432
+      WRITER_DB_DATABASE: ecom
+      BATCH_SIZE: 10
+    depends_on:
+      flyway:
+        condition: service_completed_successfully
+    profiles:
+      - with-services
+  #
   # client:
   #   build: ./client
   #   ports:

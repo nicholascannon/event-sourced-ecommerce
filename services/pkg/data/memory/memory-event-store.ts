@@ -11,7 +11,7 @@ export class MemoryEventStore implements DomainEventStore {
                 id: String(idx + 1),
                 insertingTXID: String(idx + 1),
                 ...e,
-                timestamp: new Date(),
+                timestamp: String(new Date()),
             }));
             this.events.push(...persistedSeedData);
         }
@@ -36,7 +36,7 @@ export class MemoryEventStore implements DomainEventStore {
         this.events.push({
             id: String(this.events.length + 1),
             insertingTXID: String(this.events.length + 1),
-            timestamp: new Date(),
+            timestamp: String(new Date()),
             ...event,
         });
     }

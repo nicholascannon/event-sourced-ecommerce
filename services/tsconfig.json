@@ -12,5 +12,5 @@
         "noUnusedParameters": true,
         "allowUnreachableCode": false
     },
-    "include": ["./pkg/**/*.ts", "./order-service/**/*.ts", "./checkout-pm/**/*.ts"]
+    "include": ["./pkg/**/*.ts", "./order-service/**/*.ts", "./checkout-pm/**/*.ts", "./order-rmp/**/*.ts"]
 }

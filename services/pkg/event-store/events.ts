@@ -16,5 +16,5 @@ export interface BaseEvent {
 export type PersistedEvent<T extends BaseEvent> = T & {
     id: string;
     insertingTXID: string;
-    timestamp: Date;
+    timestamp: string;
 };

@@ -54,6 +54,13 @@ export class OrderService {
         return order;
     }
 
+    async getOrders(): Promise<Order[]> {
+        // NOTE: this shuold use another readmodel that builds a customerId -> orders[]
+        // model to be queried. This is out of scope as we only deal with 1 customer so
+        // we just need to get all the orders in the eventstore.
+        return [];
+    }
+
     async checkout(orderId: string): Promise<void> {
         const events = await this.eventStore.loadStream<OrderEvent>(orderId, 'CUSTOMER_ORDER');
         const order = new Order(orderId).buildFrom(events);
