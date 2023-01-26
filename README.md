@@ -42,7 +42,7 @@ Or run locally with hot reload:
 ```sh
 ./scripts/develop.sh
 cd services
-npm run watch:<SERIVCE_NAME>
+npm run watch:<SERVICE_NAME>
 ```
 
 Each service has a `watch` command defined in the `package.json`.
