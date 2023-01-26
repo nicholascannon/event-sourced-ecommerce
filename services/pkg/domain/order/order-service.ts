@@ -3,11 +3,14 @@ import { DomainEventStore } from '../domain-event-store';
 import { Order } from './order';
 import { AlreadyCheckedOutError, InvalidOrderItemError, OrderDoesNotExist } from './order-errors';
 import { OrderEvent } from './order-events';
+import { OrderProjection } from './order-projection';
+import { OrderProjectionRepository } from './order-projection-repo';
 
 export class OrderService {
     constructor(
         private readonly eventStore: DomainEventStore,
-        private readonly productIntegration: ProductIntegration
+        private readonly productIntegration: ProductIntegration,
+        private readonly orderProjectionRepo: OrderProjectionRepository
     ) {}
 
     async addItem(orderId: string, itemId: string): Promise<AddItemResponse> {
@@ -43,22 +46,13 @@ export class OrderService {
         return 'SUCCESS';
     }
 
-    async getOrder(orderId: string): Promise<Order | undefined> {
-        // NOTE: this should use an order read model but out of scope
-        const events = await this.eventStore.loadStream<OrderEvent>(orderId, 'CUSTOMER_ORDER');
-        const order = new Order(orderId).buildFrom(events);
-
-        if (order.version === 0) {
-            return undefined;
-        }
-        return order;
+    async getOrder(orderId: string): Promise<OrderProjection> {
+        return this.orderProjectionRepo.load(orderId);
     }
 
-    async getOrders(): Promise<Order[]> {
-        // NOTE: this shuold use another readmodel that builds a customerId -> orders[]
-        // model to be queried. This is out of scope as we only deal with 1 customer so
-        // we just need to get all the orders in the eventstore.
-        return [];
+    async getOrders(): Promise<OrderProjection[]> {
+        // NOTE: should paginate this but out of scope...
+        return this.orderProjectionRepo.loadAll();
     }
 
     async checkout(orderId: string): Promise<void> {

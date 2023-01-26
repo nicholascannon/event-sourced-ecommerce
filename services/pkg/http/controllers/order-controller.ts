@@ -27,16 +27,16 @@ export class OrderController {
         const orderId = uuidValidator.validate(req.params.orderId);
         const order = await this.orderService.getOrder(orderId);
 
-        if (order === undefined) {
+        if (order.items.length === 0) {
             return res.sendStatus(404);
         }
 
-        return res.json({
-            id: order.id,
-            status: order.status,
-            items: order.items,
-            version: order.version,
-        });
+        return res.json(order);
+    }
+
+    async getOrders(_req: Request, res: Response) {
+        const orders = await this.orderService.getOrders();
+        return res.json(orders);
     }
 
     async checkout(req: Request, res: Response) {

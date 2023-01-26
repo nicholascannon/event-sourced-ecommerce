@@ -4,14 +4,19 @@ import { MockProductIntegration } from '../../pkg/integrations/product/product-i
 import { createApp } from '../app';
 import request from 'supertest';
 import { ORDER_ID, products } from '../../pkg/test/test-data';
+import { MemoryOrderProjectionRepository } from '../../pkg/data/memory/memory-order-projection-repo';
 
 describe('/v1/orders/:orderId', () => {
     let app: Express.Application;
     let eventStore: DomainEventStore;
+    let projectionRepo: MemoryOrderProjectionRepository;
 
     beforeEach(() => {
         eventStore = new MemoryEventStore();
-        app = createApp(eventStore, new MockProductIntegration(products), { logHttpRequests: false });
+        projectionRepo = new MemoryOrderProjectionRepository();
+        app = createApp(eventStore, new MockProductIntegration(products), projectionRepo, {
+            logHttpRequests: false,
+        });
     });
 
     it('should return 404 for order that does not exist', async () => {
@@ -25,24 +30,13 @@ describe('/v1/orders/:orderId', () => {
     });
 
     it('should return order', async () => {
-        // Add item
-        await eventStore.save({
-            streamId: ORDER_ID,
-            streamType: 'CUSTOMER_ORDER',
-            eventType: 'ORDER_ITEM_ADDED',
-            version: 1,
-            payload: { itemId: products[0].id, name: products[0].name },
-        });
-
-        // Checkout order
-        await eventStore.save({
-            streamId: ORDER_ID,
-            streamType: 'CUSTOMER_ORDER',
-            eventType: 'ORDER_CHECKED_OUT',
-            version: 2,
-            payload: {
-                totalPrice: 5.0,
-            },
+        const orderDate = new Date();
+        await projectionRepo.save({
+            id: ORDER_ID,
+            items: [{ id: products[0].id, name: products[0].name }],
+            status: 'CHECKED_OUT',
+            totalPrice: 5.0,
+            orderDate,
         });
 
         const { status, body } = await request(app).get(`/v1/orders/${ORDER_ID}`);
@@ -51,7 +45,8 @@ describe('/v1/orders/:orderId', () => {
             id: ORDER_ID,
             status: 'CHECKED_OUT',
             items: [{ id: products[0].id, name: products[0].name }],
-            version: 2,
+            orderDate: orderDate.toJSON(),
+            totalPrice: 5.0,
         });
     });
 });

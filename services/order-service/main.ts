@@ -5,6 +5,7 @@ import { HttpProductIntegration } from '../pkg/integrations/product/product-inte
 import { logger, setupProcessLogging } from '../pkg/shared/logger';
 import { createApp } from './app';
 import { CONFIG } from './config';
+import { PgOrderProjectionRepository } from '../pkg/data/postgres/pg-order-projection-repo';
 
 setupProcessLogging();
 
@@ -22,9 +23,13 @@ logger.info('Config', {
 
 const pool = createPool(CONFIG.database);
 const eventStore = new PgEventStore(pool);
+const orderProjectionRepo = new PgOrderProjectionRepository(pool);
 const productIntegration = new HttpProductIntegration(CONFIG.productServiceHost);
 
-const app = createApp(eventStore, productIntegration, { logHttpRequests: true, corsOrigins: CONFIG.corsOrigins });
+const app = createApp(eventStore, productIntegration, orderProjectionRepo, {
+    logHttpRequests: true,
+    corsOrigins: CONFIG.corsOrigins,
+});
 
 const server = app.listen(CONFIG.port, () => {
     logger.info('Service started', { port: CONFIG.port });

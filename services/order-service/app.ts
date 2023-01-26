@@ -8,9 +8,15 @@ import { asyncHandler } from '../pkg/http/middleware/async-handler';
 import { errorHandler } from '../pkg/http/middleware/error-handler';
 import { ProductIntegration } from '../pkg/integrations/product/product-integration';
 import { requestLogger } from '../pkg/shared/logger';
+import { OrderProjectionRepository } from '../pkg/domain/order/order-projection-repo';
 
-export function createApp(eventStore: DomainEventStore, productIntegration: ProductIntegration, options?: AppOptions) {
-    const orderService = new OrderService(eventStore, productIntegration);
+export function createApp(
+    eventStore: DomainEventStore,
+    productIntegration: ProductIntegration,
+    orderProjectionRepo: OrderProjectionRepository,
+    options?: AppOptions
+) {
+    const orderService = new OrderService(eventStore, productIntegration, orderProjectionRepo);
     const orderController = new OrderController(orderService);
 
     const app = express();
@@ -36,6 +42,10 @@ export function createApp(eventStore: DomainEventStore, productIntegration: Prod
     app.post(
         '/v1/orders/:orderId/checkout',
         asyncHandler((req, res) => orderController.checkout(req, res))
+    );
+    app.get(
+        '/v1/orders',
+        asyncHandler((req, res) => orderController.getOrders(req, res))
     );
 
     app.use(errorHandler);

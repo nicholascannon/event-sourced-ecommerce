@@ -3,12 +3,12 @@ import { Bookmark } from '../pkg/event-store/bookmark';
 import { PersistedEvent } from '../pkg/event-store/events';
 import { BookmarkRepo } from '../pkg/process-manager/bookmark';
 import { Consumer } from '../pkg/process-manager/consumer';
-import { OrderProjectionRepository } from './order-rmp-repository';
+import { PgOrderProjectionRepository } from '../pkg/data/postgres/pg-order-projection-repo';
 
 export class OrderRMPConsumer implements Consumer<DomainEvent> {
     constructor(
         private readonly bookmarkRepo: BookmarkRepo<Bookmark>,
-        private readonly projectionRepo: OrderProjectionRepository
+        private readonly projectionRepo: PgOrderProjectionRepository
     ) {}
 
     async consumeEvents(events: PersistedEvent<DomainEvent>[]) {

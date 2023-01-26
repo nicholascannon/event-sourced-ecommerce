@@ -7,7 +7,7 @@ import { BookmarkedEventReader } from '../pkg/process-manager/reader';
 import { logger, setupProcessLogging } from '../pkg/shared/logger';
 import { CONFIG } from './config';
 import { OrderRMPConsumer } from './consumer';
-import { OrderProjectionRepository } from './order-rmp-repository';
+import { PgOrderProjectionRepository } from '../pkg/data/postgres/pg-order-projection-repo';
 
 const PM_NAME = 'order-rpm';
 
@@ -38,7 +38,7 @@ lifecycle.on('close', () => writerPool.end());
 
 const eventStoreReader = new PgEventStore(readerPool);
 
-const orderProjectionRepo = new OrderProjectionRepository(writerPool);
+const orderProjectionRepo = new PgOrderProjectionRepository(writerPool);
 
 const bookmarkRepo = new PgBookmarkRepo(PM_NAME, readerPool);
 const startingBookmark = await bookmarkRepo.get();

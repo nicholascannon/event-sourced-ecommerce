@@ -5,6 +5,7 @@ import { createApp } from '../app';
 import request from 'supertest';
 import { INVALID_ITEM_ID, ORDER_ID, products } from '../../pkg/test/test-data';
 import { removePersistedProps } from '../../pkg/event-store/util';
+import { MemoryOrderProjectionRepository } from '../../pkg/data/memory/memory-order-projection-repo';
 
 describe('/v1/orders/:orderId/add/:itemId', () => {
     let app: Express.Application;
@@ -12,7 +13,9 @@ describe('/v1/orders/:orderId/add/:itemId', () => {
 
     beforeEach(() => {
         eventStore = new MemoryEventStore();
-        app = createApp(eventStore, new MockProductIntegration(products), { logHttpRequests: false });
+        app = createApp(eventStore, new MockProductIntegration(products), new MemoryOrderProjectionRepository(), {
+            logHttpRequests: false,
+        });
     });
 
     it('should return 400 for non UUID order id', async () => {

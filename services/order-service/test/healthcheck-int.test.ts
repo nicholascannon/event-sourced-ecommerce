@@ -3,6 +3,7 @@ import { DomainEventStore } from '../../pkg/domain/domain-event-store';
 import { MockProductIntegration } from '../../pkg/integrations/product/product-integration';
 import { createApp } from '../app';
 import request from 'supertest';
+import { MemoryOrderProjectionRepository } from '../../pkg/data/memory/memory-order-projection-repo';
 
 describe('/healthcheck', () => {
     let app: Express.Application;
@@ -10,7 +11,9 @@ describe('/healthcheck', () => {
 
     beforeEach(() => {
         eventStore = new MemoryEventStore();
-        app = createApp(eventStore, new MockProductIntegration([]), { logHttpRequests: false });
+        app = createApp(eventStore, new MockProductIntegration([]), new MemoryOrderProjectionRepository(), {
+            logHttpRequests: false,
+        });
     });
 
     it('should return healthy', async () => {
