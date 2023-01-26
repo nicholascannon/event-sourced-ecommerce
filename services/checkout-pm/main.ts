@@ -5,25 +5,13 @@ import { PgEventStore } from '../pkg/data/postgres/pg-event-store';
 import { MemoryEmailServiceIntegration } from '../pkg/integrations/email/memory-email-integration';
 import { startProcessManager } from '../pkg/process-manager/pm-coordinator';
 import { BookmarkedEventReader } from '../pkg/process-manager/reader';
-import { logger } from '../pkg/shared/logger';
+import { logger, setupProcessLogging } from '../pkg/shared/logger';
 import { CONFIG } from './config';
 import { CheckoutEventConsumer } from './consumer';
 
 const PM_NAME = 'checkout-pm';
 
-process
-    .on('uncaughtException', (error) => {
-        logger.error('uncaughtException', error);
-    })
-    .on('unhandledRejection', (reason) => {
-        logger.error('unhandledRejection', { reason });
-    })
-    .on('SIGTERM', () => {
-        logger.info('SIGTERM received');
-    })
-    .on('SIGINT', () => {
-        logger.info('SIGINT received');
-    });
+setupProcessLogging();
 
 logger.info('Config', {
     pmName: PM_NAME,

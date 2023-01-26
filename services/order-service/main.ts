@@ -2,23 +2,11 @@ import { lifecycle } from '../pkg/shared/lifecycle';
 import { createPool } from '../pkg/data/postgres/db';
 import { PgEventStore } from '../pkg/data/postgres/pg-event-store';
 import { HttpProductIntegration } from '../pkg/integrations/product/product-integration';
-import { logger } from '../pkg/shared/logger';
+import { logger, setupProcessLogging } from '../pkg/shared/logger';
 import { createApp } from './app';
 import { CONFIG } from './config';
 
-process
-    .on('uncaughtException', (error) => {
-        logger.error('uncaughtException', error);
-    })
-    .on('unhandledRejection', (reason) => {
-        logger.error('unhandledRejection', { reason });
-    })
-    .on('SIGTERM', () => {
-        logger.info('SIGTERM received');
-    })
-    .on('SIGINT', () => {
-        logger.info('SIGINT received');
-    });
+setupProcessLogging();
 
 logger.info('Config', {
     port: CONFIG.port,
