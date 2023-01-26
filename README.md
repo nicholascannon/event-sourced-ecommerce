@@ -28,7 +28,6 @@ I have made the following out of scope for this project to keep things simple:
 -   API authentication & authorization
 -   User specific stuff e.g. orders won't have a customer id attached
 -   Handling product price changes (e.g. concurrently setting the price while a customer checks out)
--   An Order read model process (I've just used the aggregate instead)
 
 ## How to run locally
 
@@ -54,6 +53,7 @@ Run each of these watch commands in a different terminal to get hot reloading.
 -   **Order Service**: A web API responsible for creating, adding items to, viewing and checking out orders.
 -   **Order UI**: A React frontend application for the order service, allows users to interact with the system.
 -   **Checkout Process Manager**: A process manager responsible for executing the checkout flow when orders are checked out.
+-   **Order Read Model Populator**: A read model populator that populates a projection of an Order for query purposes (used by the API).
 
 ![System design overview](./docs/diagrams/system-design.png)
 
