@@ -1,6 +1,6 @@
 import { ProductIntegration } from '../../integrations/product/product-integration';
 import { DomainEventStore } from '../domain-event-store';
-import { Order } from './order';
+import { OrderAggregate } from './order-aggregate';
 import { AlreadyCheckedOutError, InvalidOrderItemError, OrderDoesNotExist } from './order-errors';
 import { OrderEvent } from './order-events';
 import { OrderProjection } from './order-projection';
@@ -17,7 +17,7 @@ export class OrderService {
         // NOTE: I would add a check in here to ensure a user doesn't have another in-progress
         // order with a different id (creating 2 orders) but that is skipped for this demo.
         const events = await this.eventStore.loadStream<OrderEvent>(orderId, 'CUSTOMER_ORDER');
-        const order = new Order(orderId).buildFrom(events);
+        const order = new OrderAggregate(orderId).buildFrom(events);
 
         if (order.status !== 'IN_PROGRESS') {
             throw new AlreadyCheckedOutError(orderId);
@@ -57,7 +57,7 @@ export class OrderService {
 
     async checkout(orderId: string): Promise<void> {
         const events = await this.eventStore.loadStream<OrderEvent>(orderId, 'CUSTOMER_ORDER');
-        const order = new Order(orderId).buildFrom(events);
+        const order = new OrderAggregate(orderId).buildFrom(events);
 
         if (order.version === 0) {
             throw new OrderDoesNotExist(orderId);

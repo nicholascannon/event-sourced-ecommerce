@@ -1,15 +1,15 @@
-import { Order } from './order';
+import { OrderAggregate } from './order-aggregate';
 
 describe('Order', () => {
     it('should initialise an empty Order correctly', () => {
-        const order = new Order('order-id');
+        const order = new OrderAggregate('order-id');
         expect(order.id).toBe('order-id');
         expect(order.status).toBe('IN_PROGRESS');
         expect(order.version).toBe(0);
     });
 
     it('should handle item added events correctly', () => {
-        const order = new Order('order-id');
+        const order = new OrderAggregate('order-id');
         order.buildFrom([
             {
                 eventType: 'ORDER_ITEM_ADDED',
@@ -44,7 +44,7 @@ describe('Order', () => {
     });
 
     it('should handle checked out events correctly', () => {
-        const order = new Order('order-id');
+        const order = new OrderAggregate('order-id');
         order.buildFrom([
             {
                 eventType: 'ORDER_CHECKED_OUT',
@@ -64,7 +64,7 @@ describe('Order', () => {
     });
 
     it('should handle order confirmed events correctly', () => {
-        const order = new Order('order-id');
+        const order = new OrderAggregate('order-id');
         order.buildFrom([
             {
                 eventType: 'ORDER_CONFIRMED',
@@ -81,7 +81,7 @@ describe('Order', () => {
     });
 
     it('should return false for item ids not in the order', () => {
-        const order = new Order('order-id');
+        const order = new OrderAggregate('order-id');
         expect(order.hasItem('item-id')).toBeFalsy();
     });
 });

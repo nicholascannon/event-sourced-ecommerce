@@ -1,5 +1,5 @@
 import { DomainEvent, DomainEventStoreReader, DomainEventStoreWriter } from '../pkg/domain/domain-event-store';
-import { Order } from '../pkg/domain/order/order';
+import { OrderAggregate } from '../pkg/domain/order/order-aggregate';
 import { OrderEvent } from '../pkg/domain/order/order-events';
 import { Bookmark } from '../pkg/event-store/bookmark';
 import { PersistedEvent } from '../pkg/event-store/events';
@@ -24,7 +24,7 @@ export class CheckoutEventConsumer implements Consumer<DomainEvent> {
 
             // NOTE: this should use an order read model but out of scope
             const events = await this.eventStoreReader.loadStream<OrderEvent>(event.streamId, 'CUSTOMER_ORDER');
-            const order = new Order(event.streamId).buildFrom(events);
+            const order = new OrderAggregate(event.streamId).buildFrom(events);
 
             await this.emailService.sendEmail({
                 template: 'CHECKOUT',

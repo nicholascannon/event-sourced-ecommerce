@@ -1,7 +1,7 @@
 import { assertNever } from '../../shared/assert';
 import { AddItemEvent, CheckedOutEvent, OrderEvent } from './order-events';
 
-export class Order {
+export class OrderAggregate {
     private _version: number;
     private _status: OrderStatus;
     private _items: Array<{ id: string; name: string }>;
@@ -41,7 +41,7 @@ export class Order {
         return this._items;
     }
 
-    buildFrom(events: OrderEvent[]): Order {
+    buildFrom(events: OrderEvent[]): OrderAggregate {
         events.forEach((event) => {
             switch (event.eventType) {
                 case 'ORDER_ITEM_ADDED':
