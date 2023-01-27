@@ -15,7 +15,6 @@ export class MemoryOrderProjectionRepository implements OrderProjectionRepositor
                 id,
                 items: [],
                 status: 'IN_PROGRESS',
-                totalPrice: 0,
             };
         }
 

@@ -16,7 +16,6 @@ export class PgOrderProjectionRepository implements OrderProjectionRepository {
                 id,
                 items: [],
                 status: 'IN_PROGRESS',
-                totalPrice: 0,
             };
         }
 
