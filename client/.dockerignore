@@ -2,8 +2,10 @@
 **
 
 # Below is what's allowed in the build context
-!tsconfig.json
+!tsconfig*.json
 !package*.json
+!index.html
+!vite.config.ts
 
 !src/
-!scripts/
+!public/
