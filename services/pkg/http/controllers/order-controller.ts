@@ -1,10 +1,32 @@
-import { Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
 import { uuidValidator } from '../../shared/validators';
 import { OrderService } from '../../domain/order/order-service';
 import { assertNever } from '../../shared/assert';
+import { Controller } from './controller';
+import { asyncHandler } from '../middleware/async-handler';
 
-export class OrderController {
-    constructor(private readonly orderService: OrderService) {}
+export class OrderController implements Controller {
+    public readonly router: Router;
+
+    constructor(private readonly orderService: OrderService) {
+        this.router = Router();
+        this.router.post(
+            '/v1/orders/:orderId/add/:itemId',
+            asyncHandler((req, res) => this.addItem(req, res))
+        );
+        this.router.get(
+            '/v1/orders/:orderId',
+            asyncHandler((req, res) => this.getOrder(req, res))
+        );
+        this.router.post(
+            '/v1/orders/:orderId/checkout',
+            asyncHandler((req, res) => this.checkout(req, res))
+        );
+        this.router.get(
+            '/v1/orders',
+            asyncHandler((req, res) => this.getOrders(req, res))
+        );
+    }
 
     async addItem(req: Request, res: Response) {
         const orderId = uuidValidator.validate(req.params.orderId);

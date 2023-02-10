@@ -4,7 +4,6 @@ import cors from 'cors';
 import { DomainEventStore } from '../pkg/domain/domain-event-store';
 import { OrderService } from '../pkg/domain/order/order-service';
 import { OrderController } from '../pkg/http/controllers/order-controller';
-import { asyncHandler } from '../pkg/http/middleware/async-handler';
 import { errorHandler } from '../pkg/http/middleware/error-handler';
 import { ProductIntegration } from '../pkg/integrations/product/product-integration';
 import { requestLogger } from '../pkg/shared/logger';
@@ -30,24 +29,7 @@ export function createApp(
     }
 
     app.get('/healthcheck', (_req, res) => res.json({ status: 'healthy' }));
-
-    app.post(
-        '/v1/orders/:orderId/add/:itemId',
-        asyncHandler((req, res) => orderController.addItem(req, res))
-    );
-    app.get(
-        '/v1/orders/:orderId',
-        asyncHandler((req, res) => orderController.getOrder(req, res))
-    );
-    app.post(
-        '/v1/orders/:orderId/checkout',
-        asyncHandler((req, res) => orderController.checkout(req, res))
-    );
-    app.get(
-        '/v1/orders',
-        asyncHandler((req, res) => orderController.getOrders(req, res))
-    );
-
+    app.use(orderController.router);
     app.use(errorHandler);
 
     return app;
