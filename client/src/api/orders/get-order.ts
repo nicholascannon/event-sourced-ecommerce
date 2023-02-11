@@ -1,12 +1,12 @@
 import { CONFIG } from '../../config';
 import { Order } from '../../domain/orders';
 
-export const getOrderById = async (id: string): Promise<Order> => {
+export const getOrderById = async (id: string): Promise<Order | undefined> => {
     const res = await fetch(`${CONFIG.orderServiceURL}/v1/orders/${id}`);
     if (!res.ok) {
         switch (res.status) {
             case 404:
-                throw new Error(`Order ${id} does not exist`);
+                return undefined;
             case 400:
                 throw new Error(`Invalid order ID format: ${id}`);
             default:

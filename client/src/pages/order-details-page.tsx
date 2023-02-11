@@ -7,11 +7,12 @@ import { Order } from '../domain/orders';
 
 export const OrderDetailsPage = () => {
     const params = useParams();
-    const { data, error, isLoading } = useGetOrderById(params.id as string);
+    const { data: order, error, isLoading } = useGetOrderById(params.id as string);
 
     if (isLoading) return <Loader />;
     if (error) throw error;
-    return <OrderDetailsView order={data} />;
+    if (order === undefined) throw new Error(`Order not found (${params.id})`);
+    return <OrderDetailsView order={order} />;
 };
 
 // TODO: make this waaaay prettier
