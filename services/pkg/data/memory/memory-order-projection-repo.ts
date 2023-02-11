@@ -25,7 +25,7 @@ export class MemoryOrderProjectionRepository implements OrderProjectionRepositor
         this.store.set(projection.id, projection);
     }
 
-    async loadAll(): Promise<OrderProjection[]> {
-        return Array.from(this.store.values());
+    async loadCompleted(): Promise<OrderProjection[]> {
+        return Array.from(this.store.values()).filter((order) => order.status !== 'IN_PROGRESS');
     }
 }

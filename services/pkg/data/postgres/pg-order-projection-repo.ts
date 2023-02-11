@@ -34,9 +34,15 @@ export class PgOrderProjectionRepository implements OrderProjectionRepository {
         );
     }
 
-    async loadAll(): Promise<OrderProjection[]> {
+    async loadCompleted(): Promise<OrderProjection[]> {
+        // NOTE: in a full production app this query would first filter by customer id
+        // which significantly reduces the set. It would then paginate, reducing the set
+        // further, finally filtering a very small set where it filters on the JSON.
         const { rows: orders } = await this.pool.query<{ projection: OrderProjection }>(
-            `SELECT projection FROM order_context.order_projection;`
+            `SELECT 
+                projection
+            FROM order_context.order_projection
+            WHERE projection->>'status' <> 'IN_PROGRESS';`
         );
         return orders.map((order) => this.mapProjection(order.projection));
     }

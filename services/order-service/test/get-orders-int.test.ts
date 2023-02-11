@@ -39,6 +39,11 @@ describe('/v1/orders', () => {
             items: [{ id: products[1].id, name: products[1].name }],
             status: 'IN_PROGRESS',
         });
+        await projectionRepo.save({
+            id: '3',
+            items: [{ id: products[1].id, name: products[1].name }],
+            status: 'CONFIRMED',
+        });
 
         const { status, body } = await request(app).get('/v1/orders');
         expect(status).toBe(200);
@@ -51,9 +56,9 @@ describe('/v1/orders', () => {
                 totalPrice: 5.0,
             },
             {
-                id: '2',
+                id: '3',
                 items: [{ id: products[1].id, name: products[1].name }],
-                status: 'IN_PROGRESS',
+                status: 'CONFIRMED',
             },
         ]);
     });

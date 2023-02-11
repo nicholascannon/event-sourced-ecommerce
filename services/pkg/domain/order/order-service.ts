@@ -52,7 +52,7 @@ export class OrderService {
 
     async getOrders(): Promise<OrderProjection[]> {
         // NOTE: should paginate this but out of scope...
-        return this.orderProjectionRepo.loadAll();
+        return this.orderProjectionRepo.loadCompleted();
     }
 
     async checkout(orderId: string): Promise<void> {
