@@ -6,6 +6,7 @@ import { RouterProvider } from 'react-router-dom';
 import { router } from './router';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './query';
+import { CurrentOrderIdContext, getOrInitialiseOrderId } from './contexts/current-order-context';
 
 const root = ReactDOM.createRoot(document.getElementById('app') as HTMLElement);
 root.render(
@@ -13,7 +14,9 @@ root.render(
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <QueryClientProvider client={queryClient}>
-                <RouterProvider router={router} />
+                <CurrentOrderIdContext.Provider value={getOrInitialiseOrderId()}>
+                    <RouterProvider router={router} />
+                </CurrentOrderIdContext.Provider>
             </QueryClientProvider>
         </ThemeProvider>
     </React.StrictMode>
