@@ -1,9 +1,9 @@
 import React from 'react';
-import { Typography } from '@mui/material';
 import { useParams } from 'react-router';
 import { useGetOrderById } from '../hooks/use-get-order';
 import { Loader } from '../components/loader';
 import { Order } from '../domain/orders';
+import { OrderView } from '../components/order-view';
 
 export const OrderDetailsPage = () => {
     const params = useParams();
@@ -19,17 +19,8 @@ export const OrderDetailsPage = () => {
 const OrderDetailsView = ({ order }: Props) => {
     return (
         <>
-            <Typography variant="h4" gutterBottom>
-                Order #{order.id}
-            </Typography>
-            <Typography variant="body1">Status: {order.status}</Typography>
-            <br />
-            <Typography variant="body1">Items:</Typography>
-            {order.items.map((item) => (
-                <Typography variant="body1">
-                    {item.id} - {item.name}
-                </Typography>
-            ))}
+            {/* error and isLoading is handled by the behavioral component above */}
+            <OrderView order={order} displayDetails={true} error={null} isLoading={false} />
         </>
     );
 };

@@ -12,3 +12,12 @@ export type Item = {
     id: string;
     name: string;
 };
+
+/**
+ * Builds an initial state order object given an order ID.
+ */
+export const buildInitialOrder = (id: string): Order => ({
+    id,
+    status: 'IN_PROGRESS',
+    items: [],
+});
