@@ -18,7 +18,9 @@ export const OrderDetailsPage = () => {
 const OrderDetailsView = ({ order }: Props) => {
     return (
         <>
-            <Typography variant="h4">Order #{order.id}</Typography>
+            <Typography variant="h4" gutterBottom>
+                Order #{order.id}
+            </Typography>
             <Typography variant="body1">Status: {order.status}</Typography>
             <br />
             <Typography variant="body1">Items:</Typography>

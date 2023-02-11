@@ -16,7 +16,9 @@ export const MyOrdersPage = () => {
 const MyOrdersView = ({ orders }: ViewProps) => {
     return (
         <>
-            <Typography variant="h4">My Orders</Typography>
+            <Typography variant="h4" gutterBottom>
+                My Orders
+            </Typography>
             {orders.length ? orders.map((order) => <p>{order.id}</p>) : <p>No orders</p>}
         </>
     );
