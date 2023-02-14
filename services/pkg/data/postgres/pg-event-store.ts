@@ -11,7 +11,7 @@ export class PgEventStore implements DomainEventStore {
             `
                 SELECT
                     id,
-                    inserting_txid as "insertingTXID",
+                    inserting_txid as "insertingTxid",
                     stream_id AS "streamId",
                     version,
                     stream_type AS "streamType",
@@ -38,7 +38,7 @@ export class PgEventStore implements DomainEventStore {
             `
                 SELECT
                     id,
-                    inserting_txid as "insertingTXID",
+                    inserting_txid as "insertingTxid",
                     stream_id AS "streamId",
                     version,
                     stream_type AS "streamType",

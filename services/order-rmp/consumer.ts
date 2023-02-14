@@ -35,7 +35,7 @@ export class OrderRMPConsumer implements Consumer<DomainEvent> {
 
         await this.bookmarkRepo.set({
             id: events[events.length - 1].id,
-            insertingTxid: events[events.length - 1].insertingTXID,
+            insertingTxid: events[events.length - 1].insertingTxid,
         });
     }
 }

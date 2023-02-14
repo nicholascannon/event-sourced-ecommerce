@@ -27,7 +27,7 @@ export class BookmarkedEventReader<E extends BaseEvent> implements Reader<E> {
         if (events.length > 0) {
             this.currentBookmark = {
                 id: events[events.length - 1].id,
-                insertingTxid: events[events.length - 1].insertingTXID,
+                insertingTxid: events[events.length - 1].insertingTxid,
             };
         }
 

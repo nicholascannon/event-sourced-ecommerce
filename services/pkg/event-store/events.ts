@@ -10,11 +10,11 @@ export interface BaseEvent {
  * It extends any event that extends BaseEvent and adds fields that are generated
  * by the event store when saved.
  *
- * Yes this type has `insertingTXID` which is tied to a specific Postgres Eventstore
+ * Yes this type has `insertingTxid` which is tied to a specific Postgres Eventstore
  * implementation. We are taking this cost on to reduce complexity.
  */
 export type PersistedEvent<T extends BaseEvent> = T & {
     id: string;
-    insertingTXID: string;
+    insertingTxid: string;
     timestamp: string;
 };

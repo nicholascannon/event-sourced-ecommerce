@@ -9,7 +9,7 @@ export class MemoryEventStore implements DomainEventStore {
         if (seedData) {
             const persistedSeedData = seedData.map<PersistedEvent<DomainEvent>>((e, idx) => ({
                 id: String(idx + 1),
-                insertingTXID: String(idx + 1),
+                insertingTxid: String(idx + 1),
                 ...e,
                 timestamp: String(new Date()),
             }));
@@ -35,7 +35,7 @@ export class MemoryEventStore implements DomainEventStore {
 
         this.events.push({
             id: String(this.events.length + 1),
-            insertingTXID: String(this.events.length + 1),
+            insertingTxid: String(this.events.length + 1),
             timestamp: String(new Date()),
             ...event,
         });
