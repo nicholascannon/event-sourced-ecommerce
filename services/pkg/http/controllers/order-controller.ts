@@ -11,7 +11,7 @@ export class OrderController implements Controller {
     constructor(private readonly orderService: OrderService) {
         this.router = Router();
         this.router.post(
-            '/v1/orders/:orderId/add/:itemId',
+            '/v1/orders/:orderId/add',
             asyncHandler((req, res) => this.addItem(req, res))
         );
         this.router.get(
@@ -30,7 +30,7 @@ export class OrderController implements Controller {
 
     async addItem(req: Request, res: Response) {
         const orderId = uuidValidator.validate(req.params.orderId);
-        const itemId = uuidValidator.validate(req.params.itemId);
+        const itemId = uuidValidator.validate(req.body.itemId);
 
         const createItemResponse = await this.orderService.addItem(orderId, itemId);
         switch (createItemResponse) {

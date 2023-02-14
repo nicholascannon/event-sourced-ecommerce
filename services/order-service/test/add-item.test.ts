@@ -1,8 +1,8 @@
+import request from 'supertest';
 import { MemoryEventStore } from '../../pkg/data/memory/memory-event-store';
 import { DomainEventStore } from '../../pkg/domain/domain-event-store';
 import { MockProductIntegration } from '../../pkg/integrations/product/product-integration';
 import { createApp } from '../app';
-import request from 'supertest';
 import { INVALID_ITEM_ID, ORDER_ID, products } from '../../pkg/test/test-data';
 import { removePersistedProps } from '../../pkg/event-store/util';
 import { MemoryOrderProjectionRepository } from '../../pkg/data/memory/memory-order-projection-repo';
@@ -19,17 +19,17 @@ describe('/v1/orders/:orderId/add/:itemId', () => {
     });
 
     it('should return 400 for non UUID order id', async () => {
-        const { status } = await request(app).post(`/v1/orders/TEST/add/${products[0].id}`);
+        const { status } = await request(app).post('/v1/orders/TEST/add').send({ itemId: products[0].id });
         expect(status).toBe(400);
     });
 
     it('should return 400 for non UUID product id', async () => {
-        const { status } = await request(app).post(`/v1/orders/${ORDER_ID}/add/TEST`);
+        const { status } = await request(app).post(`/v1/orders/${ORDER_ID}/add`).send({ itemId: 'TEST' });
         expect(status).toBe(400);
     });
 
     it('should add item and create order if one doesnt exist under that UUID', async () => {
-        const { status } = await request(app).post(`/v1/orders/${ORDER_ID}/add/${products[0].id}`);
+        const { status } = await request(app).post(`/v1/orders/${ORDER_ID}/add`).send({ itemId: products[0].id });
         const stream = removePersistedProps(await eventStore.loadStream(ORDER_ID, 'CUSTOMER_ORDER'));
 
         expect(status).toBe(201);
@@ -54,7 +54,7 @@ describe('/v1/orders/:orderId/add/:itemId', () => {
             payload: { itemId: products[0].id, name: products[0].name },
         });
 
-        const { status } = await request(app).post(`/v1/orders/${ORDER_ID}/add/${products[1].id}`);
+        const { status } = await request(app).post(`/v1/orders/${ORDER_ID}/add`).send({ itemId: products[1].id });
         const stream = removePersistedProps(await eventStore.loadStream(ORDER_ID, 'CUSTOMER_ORDER'));
 
         expect(status).toBe(200);
@@ -77,7 +77,7 @@ describe('/v1/orders/:orderId/add/:itemId', () => {
             payload: { itemId: products[0].id, name: products[0].name },
         });
 
-        const { status } = await request(app).post(`/v1/orders/${ORDER_ID}/add/${products[0].id}`);
+        const { status } = await request(app).post(`/v1/orders/${ORDER_ID}/add`).send({ itemId: products[0].id });
         const stream = removePersistedProps(await eventStore.loadStream(ORDER_ID, 'CUSTOMER_ORDER'));
 
         expect(status).toBe(202);
@@ -95,7 +95,7 @@ describe('/v1/orders/:orderId/add/:itemId', () => {
             },
         });
 
-        const { status, body } = await request(app).post(`/v1/orders/${ORDER_ID}/add/${products[0].id}`);
+        const { status, body } = await request(app).post(`/v1/orders/${ORDER_ID}/add`).send({ itemId: products[0].id });
         const stream = removePersistedProps(await eventStore.loadStream(ORDER_ID, 'CUSTOMER_ORDER'));
 
         expect(status).toBe(403);
@@ -104,7 +104,9 @@ describe('/v1/orders/:orderId/add/:itemId', () => {
     });
 
     it('should not allow invalid items to be added to orders', async () => {
-        const { status, body } = await request(app).post(`/v1/orders/${ORDER_ID}/add/${INVALID_ITEM_ID}`);
+        const { status, body } = await request(app)
+            .post(`/v1/orders/${ORDER_ID}/add`)
+            .send({ itemId: INVALID_ITEM_ID });
         expect(status).toBe(400);
         expect(body).toEqual({ message: 'Invalid order item', itemIds: [INVALID_ITEM_ID] });
     });
