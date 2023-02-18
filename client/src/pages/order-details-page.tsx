@@ -3,7 +3,7 @@ import { useParams } from 'react-router';
 import { useGetOrderById } from '../data/queries/use-get-order';
 import { Loader } from '../components/loader';
 import { Order } from '../domain/orders';
-import { OrderView } from '../components/order-view';
+import { OrderComponent } from '../components/order-component';
 
 export const OrderDetailsPage = () => {
     const params = useParams();
@@ -20,7 +20,7 @@ const OrderDetailsView = ({ order }: Props) => {
     return (
         <>
             {/* error and isLoading is handled by the behavioral component above */}
-            <OrderView order={order} displayDetails={true} error={null} isLoading={false} />
+            <OrderComponent order={order} displayDetails={true} error={null} isLoading={false} />
         </>
     );
 };

@@ -3,7 +3,7 @@ import { Button, Typography } from '@mui/material';
 import { Loader } from '../components/loader';
 import { CurrentOrderIdContext } from '../data/contexts/current-order-context';
 import { useGetOrderById } from '../data/queries/use-get-order';
-import { OrderView } from '../components/order-view';
+import { OrderComponent } from '../components/order-component';
 import { buildInitialOrder } from '../domain/orders';
 
 export const CartPage = () => {
@@ -24,7 +24,7 @@ export const CartPage = () => {
             checkoutOrder={checkoutOrder}
             isCheckingOut={isCheckingOut}
             currentOrder={
-                <OrderView
+                <OrderComponent
                     error={getOrderQuery.error}
                     isLoading={getOrderQuery.isLoading}
                     order={getOrderQuery.data || buildInitialOrder(orderId)}

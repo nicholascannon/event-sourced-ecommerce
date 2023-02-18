@@ -3,7 +3,7 @@ import { Typography } from '@mui/material';
 import { Loader } from './loader';
 import { Order } from '../domain/orders';
 
-export const OrderView = ({ error, isLoading, order, displayDetails = true }: Props) => {
+export const OrderComponent = ({ error, isLoading, order, displayDetails = true }: Props) => {
     if (isLoading) return <Loader />;
     if (error) return <Typography variant="body1">There was an error loading your order.</Typography>;
 
