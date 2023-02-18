@@ -5,8 +5,8 @@ import { theme } from './theme';
 import { RouterProvider } from 'react-router-dom';
 import { router } from './router';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { queryClient } from './query';
-import { CurrentOrderIdContext, getOrInitialiseOrderId } from './contexts/current-order-context';
+import { queryClient } from './data/query-client';
+import { CurrentOrderIdContext, getOrInitialiseOrderId } from './data/contexts/current-order-context';
 
 const root = ReactDOM.createRoot(document.getElementById('app') as HTMLElement);
 root.render(

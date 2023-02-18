@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router';
-import { useGetOrderById } from '../hooks/use-get-order';
+import { useGetOrderById } from '../data/queries/use-get-order';
 import { Loader } from '../components/loader';
 import { Order } from '../domain/orders';
 import { OrderView } from '../components/order-view';

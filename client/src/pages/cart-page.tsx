@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { Button, Typography } from '@mui/material';
 import { Loader } from '../components/loader';
-import { CurrentOrderIdContext } from '../contexts/current-order-context';
-import { useGetOrderById } from '../hooks/use-get-order';
+import { CurrentOrderIdContext } from '../data/contexts/current-order-context';
+import { useGetOrderById } from '../data/queries/use-get-order';
 import { OrderView } from '../components/order-view';
 import { buildInitialOrder } from '../domain/orders';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { Loader } from '../components/loader';
 import { Product } from '../domain/product';
-import { useGetProducts } from '../hooks/use-get-products';
+import { useGetProducts } from '../data/queries/use-get-products';
 
 export const ProductsPage = () => {
     const { data: products, error, isLoading } = useGetProducts();

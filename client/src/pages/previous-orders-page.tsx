@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { Order } from '../domain/orders';
-import { useGetOrders } from '../hooks/use-get-orders';
+import { useGetOrders } from '../data/queries/use-get-orders';
 import { Loader } from '../components/loader';
 
 export const PreviousOrdersPage = () => {
