@@ -6,7 +6,7 @@ import { useGetOrderById } from '../hooks/use-get-order';
 import { OrderView } from '../components/order-view';
 import { buildInitialOrder } from '../domain/orders';
 
-export const YourOrderPage = () => {
+export const CartPage = () => {
     const [isCheckingOut, setIsCheckingOut] = useState(false);
 
     const orderId = useContext(CurrentOrderIdContext);
@@ -20,7 +20,7 @@ export const YourOrderPage = () => {
 
     if (getOrderQuery.error) console.error(getOrderQuery.error); // log but let user attempt checkout
     return (
-        <YourOrderPageView
+        <CartPageView
             checkoutOrder={checkoutOrder}
             isCheckingOut={isCheckingOut}
             currentOrder={
@@ -36,11 +36,11 @@ export const YourOrderPage = () => {
 };
 
 // TODO: make this more pretty
-const YourOrderPageView = ({ checkoutOrder, isCheckingOut, currentOrder }: Props) => {
+const CartPageView = ({ checkoutOrder, isCheckingOut, currentOrder }: Props) => {
     return (
         <>
             <Typography variant="h4" gutterBottom>
-                Your Order
+                Cart
             </Typography>
 
             {currentOrder}

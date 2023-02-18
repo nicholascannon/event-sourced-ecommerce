@@ -1,11 +1,11 @@
 import React from 'react';
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 import { RootLayout } from './layouts/root-layout';
-import { YourOrderPage } from './pages/your-order-page';
+import { CartPage } from './pages/cart-page';
 import { ErrorPage } from './pages/error-page';
-import { MyOrdersPage } from './pages/my-orders-page';
+import { PreviousOrdersPage } from './pages/previous-orders-page';
 import { OrderDetailsPage } from './pages/order-details-page';
-import { ProductPage } from './pages/products-page';
+import { ProductsPage } from './pages/products-page';
 
 export const router = createBrowserRouter([
     {
@@ -19,19 +19,19 @@ export const router = createBrowserRouter([
         children: [
             {
                 path: '/',
-                element: <MyOrdersPage />,
+                element: <ProductsPage />,
             },
             {
-                path: '/order',
-                element: <YourOrderPage />,
+                path: '/cart',
+                element: <CartPage />,
+            },
+            {
+                path: '/previous-orders',
+                element: <PreviousOrdersPage />,
             },
             {
                 path: '/order/:id',
                 element: <OrderDetailsPage />,
-            },
-            {
-                path: '/products',
-                element: <ProductPage />,
             },
         ],
     },

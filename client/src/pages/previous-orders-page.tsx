@@ -4,22 +4,22 @@ import { Order } from '../domain/orders';
 import { useGetOrders } from '../hooks/use-get-orders';
 import { Loader } from '../components/loader';
 
-export const MyOrdersPage = () => {
+export const PreviousOrdersPage = () => {
     const { data, error, isLoading } = useGetOrders();
 
     if (isLoading) return <Loader />;
     if (error) throw error;
-    return <MyOrdersView orders={data} />;
+    return <PreviousOrdersPageView orders={data} />;
 };
 
 // TODO: make this prettier...
-const MyOrdersView = ({ orders }: ViewProps) => {
+const PreviousOrdersPageView = ({ orders }: ViewProps) => {
     return (
         <>
             <Typography variant="h4" gutterBottom>
-                My Orders
+                Your Previous Orders
             </Typography>
-            {orders.length ? orders.map((order) => <p>{order.id}</p>) : <p>No orders</p>}
+            {orders.length ? orders.map((order) => <p key={order.id}>{order.id}</p>) : <p>No orders</p>}
         </>
     );
 };
