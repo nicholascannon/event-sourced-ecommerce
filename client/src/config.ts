@@ -5,6 +5,7 @@ export const CONFIG: Config = (() => {
         case 'http://127.0.0.1:3000':
             return {
                 orderServiceURL: 'http://localhost:8000',
+                productServiceURL: 'http://localhost:8001',
             };
         default:
             throw new Error(`No config for origin ${origin}`);
@@ -13,4 +14,5 @@ export const CONFIG: Config = (() => {
 
 type Config = {
     orderServiceURL: string;
+    productServiceURL: string;
 };
