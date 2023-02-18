@@ -1,10 +1,9 @@
 import React from 'react';
-import { Divider, IconButton, List, Toolbar } from '@mui/material';
-import { ChevronLeft as ChevronLeftIcon, Home as HomeIcon, Add as AddIcon } from '@mui/icons-material';
+import { Divider, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Toolbar } from '@mui/material';
 import { Drawer } from './drawer';
-import { NavLink } from './nav-link';
+import { Link } from './link';
 
-export function Nav({ open, toggle }: Props) {
+export const Nav = ({ open, toggle }: Props) => {
     return (
         <Drawer variant="permanent" open={open}>
             <Toolbar
@@ -28,9 +27,26 @@ export function Nav({ open, toggle }: Props) {
             </List>
         </Drawer>
     );
-}
+};
 
 type Props = {
     open: boolean;
     toggle: () => void;
+};
+
+const NavLink = ({ to, text, icon }: NavLinkProps) => {
+    return (
+        <Link to={to} decoration={false}>
+            <ListItemButton>
+                <ListItemIcon>{icon}</ListItemIcon>
+                <ListItemText primary={text} />
+            </ListItemButton>
+        </Link>
+    );
+};
+
+type NavLinkProps = {
+    to: string;
+    text: string;
+    icon: React.ReactElement;
 };
