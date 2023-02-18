@@ -15,7 +15,7 @@ export const requestLogger = expressWinston.logger({
     ignoreRoute: (req) => req.path === '/healthcheck',
 });
 
-export function setupProcessLogging() {
+export const setupProcessLogging = () => {
     process
         .on('uncaughtException', (error) => {
             logger.error('uncaughtException', error);
@@ -29,4 +29,4 @@ export function setupProcessLogging() {
         .on('SIGINT', () => {
             logger.info('SIGINT received');
         });
-}
+};

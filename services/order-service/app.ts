@@ -9,12 +9,12 @@ import { ProductIntegration } from '../pkg/integrations/product/product-integrat
 import { requestLogger } from '../pkg/shared/logger';
 import { OrderProjectionRepository } from '../pkg/domain/order/order-projection-repo';
 
-export function createApp(
+export const createApp = (
     eventStore: DomainEventStore,
     productIntegration: ProductIntegration,
     orderProjectionRepo: OrderProjectionRepository,
     options?: AppOptions
-) {
+) => {
     const orderService = new OrderService(eventStore, productIntegration, orderProjectionRepo);
     const orderController = new OrderController(orderService);
 
@@ -33,7 +33,7 @@ export function createApp(
     app.use(errorHandler);
 
     return app;
-}
+};
 
 interface AppOptions {
     logHttpRequests?: boolean;

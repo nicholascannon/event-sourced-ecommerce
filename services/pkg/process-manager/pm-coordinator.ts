@@ -5,11 +5,11 @@ import { lifecycle } from '../shared/lifecycle';
 import { logger } from '../shared/logger';
 import { BaseEvent } from '../event-store/events';
 
-export async function startProcessManager<E extends BaseEvent>(
+export const startProcessManager = async <E extends BaseEvent>(
     reader: Reader<E>,
     consumer: Consumer<E>,
     options: { batchSize: number; delay: number }
-) {
+) => {
     const { batchSize, delay } = options;
 
     while (lifecycle.isRunning()) {
@@ -27,4 +27,4 @@ export async function startProcessManager<E extends BaseEvent>(
             to: events[events.length - 1].id,
         });
     }
-}
+};
