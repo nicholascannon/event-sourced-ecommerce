@@ -19,8 +19,7 @@ export const OrderDetailsPage = () => {
 const OrderDetailsView = ({ order }: Props) => {
     return (
         <>
-            {/* error and isLoading is handled by the behavioral component above */}
-            <OrderComponent order={order} displayDetails={true} error={null} isLoading={false} />
+            <OrderComponent order={order} displayDetails={true} />
         </>
     );
 };

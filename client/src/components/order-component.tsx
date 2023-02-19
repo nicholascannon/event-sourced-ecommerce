@@ -34,7 +34,7 @@ export const OrderComponent = ({ error, isLoading, order, displayDetails = true 
 
 type Props = {
     order: Order;
-    error: Error | null;
-    isLoading: boolean;
+    error?: Error | null;
+    isLoading?: boolean;
     displayDetails?: boolean;
 };
