@@ -6,6 +6,7 @@ import { useGetOrderById } from '../data/queries/use-get-order';
 import { OrderComponent } from '../components/order-component';
 import { buildInitialOrder } from '../domain/orders';
 import { useCheckoutOrderMutation } from '../data/mutations/checkout-order';
+import { Navigate } from 'react-router-dom';
 
 export const CartPage = () => {
     const orderId = useContext(CurrentOrderIdContext);
@@ -17,8 +18,8 @@ export const CartPage = () => {
 
     if (getOrderQuery.error && !orderWasNotFoundError) console.error(getOrderQuery.error); // log but let user attempt checkout
     if (mutation.isSuccess) {
-        // TODO: redirect to static success page, clear the order ID from local storage and context
-        return <Typography variant="body1">Checkout Success!</Typography>;
+        // TODO: clear the order ID from local storage and context
+        return <Navigate to="/checkout-success" />;
     }
 
     return (

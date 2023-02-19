@@ -6,6 +6,7 @@ import { ErrorPage } from './pages/error-page';
 import { PreviousOrdersPage } from './pages/previous-orders-page';
 import { OrderDetailsPage } from './pages/order-details-page';
 import { ProductsPage } from './pages/products-page';
+import { CheckoutSuccessPage } from './pages/checkout-success-page';
 
 export const router = createBrowserRouter([
     {
@@ -32,6 +33,10 @@ export const router = createBrowserRouter([
             {
                 path: '/order/:id',
                 element: <OrderDetailsPage />,
+            },
+            {
+                path: '/checkout-success',
+                element: <CheckoutSuccessPage />,
             },
         ],
     },
