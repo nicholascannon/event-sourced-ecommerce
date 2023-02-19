@@ -11,7 +11,6 @@ export const OrderDetailsPage = () => {
 
     if (isLoading) return <Loader />;
     if (error) throw error;
-    if (order === undefined) throw new Error(`Order not found (${params.id})`);
     return <OrderDetailsView order={order} />;
 };
 

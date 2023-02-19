@@ -3,7 +3,7 @@ import { Typography } from '@mui/material';
 import { Loader } from './loader';
 import { Order } from '../domain/orders';
 
-export const OrderComponent = ({ error, isLoading, order, displayDetails = true }: Props) => {
+export const OrderComponent = ({ isError: error, isLoading, order, displayDetails = true }: Props) => {
     if (isLoading) return <Loader />;
     if (error) return <Typography variant="body1">There was an error loading your order.</Typography>;
 
@@ -34,7 +34,7 @@ export const OrderComponent = ({ error, isLoading, order, displayDetails = true 
 
 type Props = {
     order: Order;
-    error?: Error | null;
+    isError?: boolean;
     isLoading?: boolean;
     displayDetails?: boolean;
 };

@@ -3,7 +3,7 @@ import { getOrderById } from '../../api/orders/get-order';
 import { Order } from '../../domain/orders';
 
 export const useGetOrderById = (orderId: string) =>
-    useQuery<Order | undefined, Error>({
+    useQuery<Order, Error>({
         queryKey: ['order', orderId],
         queryFn: () => getOrderById(orderId),
     });

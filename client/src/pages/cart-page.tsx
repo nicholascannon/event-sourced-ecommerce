@@ -12,7 +12,10 @@ export const CartPage = () => {
     const getOrderQuery = useGetOrderById(orderId);
     const mutation = useCheckoutOrderMutation();
 
-    if (getOrderQuery.error) console.error(getOrderQuery.error); // log but let user attempt checkout
+    // we still want to display an init order if it was a 404 error
+    const orderWasNotFoundError = Boolean(getOrderQuery.error?.message.includes('Order not found'));
+
+    if (getOrderQuery.error && !orderWasNotFoundError) console.error(getOrderQuery.error); // log but let user attempt checkout
     if (mutation.isSuccess) {
         // TODO: redirect to static success page, clear the order ID from local storage and context
         return <Typography variant="body1">Checkout Success!</Typography>;
@@ -23,9 +26,10 @@ export const CartPage = () => {
             checkoutOrder={() => mutation.mutate(orderId)}
             isCheckingOut={mutation.isLoading}
             checkoutError={mutation.isError}
+            disableCheckout={orderWasNotFoundError}
             currentOrder={
                 <OrderComponent
-                    error={getOrderQuery.error}
+                    isError={getOrderQuery.isError && !orderWasNotFoundError}
                     isLoading={getOrderQuery.isLoading}
                     order={getOrderQuery.data || buildInitialOrder(orderId)}
                     displayDetails={false}
@@ -36,7 +40,7 @@ export const CartPage = () => {
 };
 
 // TODO: make this more pretty
-const CartPageView = ({ checkoutOrder, isCheckingOut, currentOrder, checkoutError }: Props) => {
+const CartPageView = ({ checkoutOrder, isCheckingOut, currentOrder, checkoutError, disableCheckout }: Props) => {
     return (
         <>
             <Typography variant="h4" gutterBottom>
@@ -46,7 +50,7 @@ const CartPageView = ({ checkoutOrder, isCheckingOut, currentOrder, checkoutErro
             {currentOrder}
 
             {!isCheckingOut && (
-                <Button variant="outlined" onClick={checkoutOrder}>
+                <Button variant="outlined" onClick={checkoutOrder} disabled={disableCheckout}>
                     Checkout
                 </Button>
             )}
@@ -61,4 +65,5 @@ type Props = {
     isCheckingOut: boolean;
     checkoutError: boolean;
     currentOrder: JSX.Element;
+    disableCheckout: boolean;
 };
