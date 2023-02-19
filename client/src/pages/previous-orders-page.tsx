@@ -21,7 +21,9 @@ const PreviousOrdersPageView = ({ orders }: ViewProps) => {
             </Typography>
 
             {orders.map((order) => (
-                <Typography variant="body1">{order.id}</Typography>
+                <Typography key={order.id} variant="body1">
+                    {order.id}
+                </Typography>
             ))}
 
             {orders.length === 0 && <Typography variant="body1">You have no previous orders</Typography>}
