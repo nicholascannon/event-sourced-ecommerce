@@ -22,10 +22,11 @@ export class CheckoutEventConsumer implements Consumer<DomainEvent> {
                 continue;
             }
 
-            // NOTE: this should use an order read model but out of scope
             const events = await this.eventStoreReader.loadStream<OrderEvent>(event.streamId, 'CUSTOMER_ORDER');
             const order = new OrderAggregate(event.streamId).buildFrom(events);
 
+            // NOTE: we'd need to reach out to an external service here to get the relevant customers email address
+            // the event would ideally have some kind of customer ID attached that we could use. This is out of scope.
             await this.emailService.sendEmail({
                 template: 'CHECKOUT',
                 payload: {
