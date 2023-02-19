@@ -1,4 +1,4 @@
-import Ajv, { ErrorObject, JSONSchemaType, ValidateFunction } from 'ajv';
+import Ajv, { JSONSchemaType, ValidateFunction } from 'ajv';
 import ajvFormats from 'ajv-formats';
 
 export class AjvValidator<T> implements Validator<T> {
@@ -21,14 +21,10 @@ export class AjvValidator<T> implements Validator<T> {
 
         const errors = this.isValid.errors;
         if (errors && errors.length > 0) {
-            throw new ValidationError(this.mapAjvErrors(errors));
+            throw new ValidationError(AjvValidator.AJV.errorsText(errors));
         }
 
-        throw new ValidationError(['Object validation failed with no error messages']);
-    }
-
-    private mapAjvErrors(errors: ErrorObject[]): string[] {
-        return errors.map((error) => error.message || `${error.instancePath} violated ${error.keyword} rule`);
+        throw new ValidationError('Object validation failed with no error messages');
     }
 }
 
@@ -37,7 +33,7 @@ export interface Validator<T> {
 }
 
 export class ValidationError extends Error {
-    constructor(public errors: string[]) {
+    constructor(public errors: string) {
         super('Object validation failed');
         this.name = this.constructor.name;
     }
