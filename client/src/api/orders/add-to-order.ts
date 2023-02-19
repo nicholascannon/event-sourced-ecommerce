@@ -10,11 +10,7 @@ export const addToOrder = async (orderId: string, itemId: string) => {
     });
 
     if (!res.ok) {
-        if (res.status === 400) {
-            const errorMessage = await res.text();
-            throw new Error(`Failed to add item to order: ${errorMessage}`);
-        }
-
-        throw new Error(`Failed to add item to order: ${res.status} ${res.statusText}`);
+        const errorMessage = await res.text();
+        throw new Error(`Failed to add item to order: ${errorMessage}`);
     }
 };
