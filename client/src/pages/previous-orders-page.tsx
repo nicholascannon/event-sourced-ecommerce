@@ -19,7 +19,12 @@ const PreviousOrdersPageView = ({ orders }: ViewProps) => {
             <Typography variant="h4" gutterBottom>
                 Your Previous Orders
             </Typography>
-            {orders.length ? orders.map((order) => <p key={order.id}>{order.id}</p>) : <p>No orders</p>}
+
+            {orders.map((order) => (
+                <Typography variant="body1">{order.id}</Typography>
+            ))}
+
+            {orders.length === 0 && <Typography variant="body1">You have no previous orders</Typography>}
         </>
     );
 };
