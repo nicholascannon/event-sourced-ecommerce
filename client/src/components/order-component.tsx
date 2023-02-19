@@ -22,7 +22,7 @@ export const OrderComponent = ({ isError: error, isLoading, order, displayDetail
             <Typography variant="body1">Items:</Typography>
             {/* TODO: change this to a table component */}
             {order.items.map((item) => (
-                <Typography variant="body1">
+                <Typography variant="body1" key={item.id}>
                     {item.id} - {item.name}
                 </Typography>
             ))}
