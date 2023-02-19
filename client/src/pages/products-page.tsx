@@ -1,8 +1,8 @@
 import React from 'react';
-import { Box, Button, Typography } from '@mui/material';
 import { Loader } from '../components/loader';
 import { Product } from '../domain/product';
 import { useGetProducts } from '../data/queries/use-get-products';
+import { ProductComponent } from '../components/product-component';
 
 export const ProductsPage = () => {
     const { data: products, error, isLoading } = useGetProducts();
@@ -16,10 +16,7 @@ export const ProductsPageView = ({ products }: Props) => {
     return (
         <>
             {products.map((product) => (
-                <Box key={product.id}>
-                    <Typography variant="body1">{product.name}</Typography>
-                    <Button variant="outlined">Add to order</Button>
-                </Box>
+                <ProductComponent key={product.id} product={product} />
             ))}
         </>
     );
