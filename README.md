@@ -4,28 +4,29 @@ An event sourced ecommerce system for learning and development.
 
 **STACK: TypeScript, Node.js, Postgres, Docker, ESBuild, Flyway.**
 
-**IMPORTANT:** The way I've written this system is not necessarily indicative of what I think is the _best way_ to solve this problem.
-I've tried a few paradigms, techniques and tools (e.g. a bit more Object Orientated instead of Functional) for the sake of learning and example.
-Each of these decisions obviously carry tradeoffs with it.
+## Project Context
 
-## Project Goals
+Create a system that allows clients to add items to an order, view the order and then checkout, emailing them with a confirmation email.
+The business requires orders not yet checked out to be persisted server-side so clients can continue orders on different devices.
+Checked out orders can not have new items added.
 
--   Create an order
--   Add an item to order
--   Checkout an order
--   View order
+The business is very data driven and therefore require that we track the lifecycle of orders from first item added to checkout.
 
-## Out of Scope
+I have made the following **out of scope** to keep things simple:
 
-I have made the following out of scope for this project to keep things simple:
-
--   Item quantities (orders can have multiple items but with quantity 1)
--   Removing items from order
+-   Item quantities and removing items
 -   Sending emails (use a mock)
--   Product bounded context e.g. product service (use a mock)
--   API authentication & authorization
--   User specific stuff e.g. orders won't have a customer id attached
--   Handling product price changes (e.g. concurrently setting the price while a customer checks out)
+-   Product service (use a mock)
+-   Authentication & authorization
+-   Handling concurrency issues with product price changes
+
+## Services Overview
+
+![System design overview](./docs/diagrams/system-design.png)
+
+-   **Order Service**: A web API responsible for creating, adding items to, viewing and checking out orders.
+-   **Checkout Process Manager**: A process manager responsible for executing the checkout flow when orders are checked out.
+-   **Order Read Model Populator**: A read model populator that populates a projection of an Order for query purposes (used by the API).
 
 ## How to run locally
 
@@ -45,14 +46,6 @@ npm run watch:<SERVICE_NAME>
 
 Each service has a `watch` command defined in the `package.json`.
 Run each of these watch commands in a different terminal to get hot reloading.
-
-## Services Overview
-
--   **Order Service**: A web API responsible for creating, adding items to, viewing and checking out orders.
--   **Checkout Process Manager**: A process manager responsible for executing the checkout flow when orders are checked out.
--   **Order Read Model Populator**: A read model populator that populates a projection of an Order for query purposes (used by the API).
-
-![System design overview](./docs/diagrams/system-design.png)
 
 ## Project Structure
 
@@ -92,7 +85,6 @@ Here's some quick links to jump to the interesting stuff:
 
 -   [Order service express app](./services/order-service/app.ts) (a good starting point)
 -   [Order service](./services/pkg/domain/order/order-service.ts)
--   [Order aggregate](./services/pkg/domain/order/order.ts)
 -   [Order HTTP controller](./services/pkg/http/controllers/order-controller.ts)
--   [Order events](./services/pkg/domain/order/order-events.ts)
+-   [Order domain code](./services/pkg/domain/order)
 -   [Postgres eventstore](./services/pkg/data/postgres/pg-event-store.ts)
