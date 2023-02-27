@@ -87,7 +87,7 @@ README.md           # File you're reading now
 
 ## Quick links
 
-Not farmiliar with the structure of this project?
+Not familiar with the structure of this project?
 Here's some quick links to jump to the interesting stuff:
 
 -   [Order service express app](./services/order-service/app.ts) (a good starting point)
