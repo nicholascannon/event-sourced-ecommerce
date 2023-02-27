@@ -2,9 +2,7 @@
 
 An event sourced ecommerce system for learning and development.
 
-Project status: **backend working! frontend still in progress**.
-
-**STACK: TypeScript, Node.js, React, Postgres, Docker, Vite, ESBuild Flyway.**
+**STACK: TypeScript, Node.js, Postgres, Docker, ESBuild, Flyway.**
 
 **IMPORTANT:** The way I've written this system is not necessarily indicative of what I think is the _best way_ to solve this problem.
 I've tried a few paradigms, techniques and tools (e.g. a bit more Object Orientated instead of Functional) for the sake of learning and example.
@@ -51,7 +49,6 @@ Run each of these watch commands in a different terminal to get hot reloading.
 ## Services Overview
 
 -   **Order Service**: A web API responsible for creating, adding items to, viewing and checking out orders.
--   **Order UI**: A React frontend application for the order service, allows users to interact with the system.
 -   **Checkout Process Manager**: A process manager responsible for executing the checkout flow when orders are checked out.
 -   **Order Read Model Populator**: A read model populator that populates a projection of an Order for query purposes (used by the API).
 
@@ -60,9 +57,6 @@ Run each of these watch commands in a different terminal to get hot reloading.
 ## Project Structure
 
 ```sh
-client/             # The React Order UI
-    package.json
-    ...
 docs/               # Documentation and diagrams
     ...
 mocks/              # Mocked services (e.g. product bounded context)
@@ -89,7 +83,6 @@ README.md           # File you're reading now
 ## Further Reading
 
 -   [Order events overview](./docs/events.md)
--   [Client overview](./client/README.md)
 -   [Product service mock](./mocks/product-service/README.md)
 
 ## Quick links
