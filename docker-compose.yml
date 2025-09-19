@@ -1,10 +1,8 @@
-version: '3'
-
 services:
   event-store:
     image: postgres:13.5-alpine
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d postgres']
       interval: 1s
       timeout: 2s
       retries: 15

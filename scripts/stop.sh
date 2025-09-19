@@ -1,1 +1,1 @@
-docker-compose --profile with-services down
+docker compose --profile with-services down

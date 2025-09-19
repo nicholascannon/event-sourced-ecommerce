@@ -1,1 +1,1 @@
-docker-compose --profile with-services up --build
+docker compose --profile with-services up --build
