@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "a22b1c26-394b-496e-87ed-0429b5dd1104",
+		"_postman_id": "9d9c7b41-9ba3-4524-8db3-b56c7da13768",
 		"name": "Event Sourced Ecommerce",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -10,8 +10,17 @@
 			"request": {
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"itemId\": \"8151c2fc-6e3c-4285-a1b0-a00c194cd5ac\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "http://localhost:8000/v1/orders/84c934a6-9c52-448e-b021-4927a0908c24/add/8151c2fc-6e3c-4285-a1b0-a00c194cd5ac",
+					"raw": "http://localhost:8000/v1/orders/84c934a6-9c52-448e-b021-4927a0908c24/add",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -21,8 +30,7 @@
 						"v1",
 						"orders",
 						"84c934a6-9c52-448e-b021-4927a0908c24",
-						"add",
-						"8151c2fc-6e3c-4285-a1b0-a00c194cd5ac"
+						"add"
 					]
 				}
 			},
@@ -33,8 +41,17 @@
 			"request": {
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"itemId\": \"64b8240a-1737-4714-9c78-03ab9f7f0507\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "http://localhost:8000/v1/orders/84c934a6-9c52-448e-b021-4927a0908c24/add/64b8240a-1737-4714-9c78-03ab9f7f0507",
+					"raw": "http://localhost:8000/v1/orders/84c934a6-9c52-448e-b021-4927a0908c24/add",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -44,8 +61,7 @@
 						"v1",
 						"orders",
 						"84c934a6-9c52-448e-b021-4927a0908c24",
-						"add",
-						"64b8240a-1737-4714-9c78-03ab9f7f0507"
+						"add"
 					]
 				}
 			},
