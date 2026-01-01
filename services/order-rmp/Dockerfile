@@ -1,4 +1,4 @@
-FROM node:16.17.1-alpine AS base
+FROM node:24.12.0-alpine AS base
 
 FROM base AS build
 WORKDIR /usr/src/app
@@ -12,7 +12,7 @@ COPY tsconfig.json .
 
 RUN npm run format:check
 RUN npm run build:order-rmp
-RUN npm test
+RUN npm run test:pkg
 
 FROM base AS runtime
 WORKDIR /opt/app
